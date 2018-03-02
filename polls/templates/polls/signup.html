@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  	<head>
+	    <meta charset="utf-8">
+	    <title>用户注册</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+
+	    <!-- Bootstrap core CSS -->
+	    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- Font Awesome -->
+		<link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+		<!-- ionicons -->
+		<link href="/static/css/ionicons.min.css" rel="stylesheet">
+		
+		<!-- Simplify -->
+		<link href="/static/css/simplify.min.css" rel="stylesheet">
+
+  	</head>
+
+  	<body class="overflow-hidden light-background" >
+		<div class="wrapper no-navigation preload">
+			<div class="sign-in-wrapper">
+				<div class="sign-in-inner">
+					<div class="login-brand text-center">
+						<i class="fa fa-database m-right-xs"></i> A918问答系统 <strong class="text-skin">用户注册</strong>
+					</div>
+
+
+
+					<form method="post" id="user_form" enctype="multipart/form-data">
+                        {% csrf_token %}
+						<div class="form-group m-bottom-md">
+                            <input type="text" name="username" id="username" class="form-control" placeholder="用户名" maxlength="30" onblur="username_check()" style="display:inline-block; width: 94%">
+                            <i class="fa fa-lg" style="display:inline-block;color: lawngreen;" id="name_icon"></i>
+                            <span id="username_warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
+						</div>
+						<div class="form-group m-bottom-md">
+							<input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="30" onblur="check_password()" style="display:inline-block; width: 94%">
+                            <i class="fa fa-lg" style="display:inline-block;color: lawngreen" id="pw_icon"></i>
+                            <span id="pw_warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
+						</div>
+						<div class="form-group m-bottom-md">
+							<input type="password" name="password_check" id="password_check" class="form-control"
+                                   onblur="check_password()" placeholder="确认密码" style="display:inline-block; width: 94%">
+                            <i class="fa fa-lg" style="display:inline-block;color: lawngreen" id="pw_check_icon"></i>
+                            <span id="warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
+						</div>
+
+						<div class="m-top-md p-top-sm" >
+                            <input type="button" id="submit_button" onclick="formsubmit()" class="btn btn-success block form-control" value="创建账户" style="width: 94%">
+						</div>
+
+						<div class="m-top-md p-top-sm">
+							<div class="font-12 text-center m-bottom-xs">已经拥有账户？</div>
+							<a href="../login/" class="btn btn-default block" style="width: 94%">登录</a>
+						</div>
+					</form>
+				</div><!-- ./sign-in-inner -->
+			</div><!-- ./sign-in-wrapper -->
+		</div><!-- /wrapper -->
+
+		<a href="" id="scroll-to-top" class="hidden-print"><i class="icon-chevron-up"></i></a>
+
+	    <!-- Le javascript
+	    ================================================== -->
+	    <!-- Placed at the end of the document so the pages load faster -->
+		
+		<!-- Jquery -->
+		<script src="/static/js/jquery-1.11.1.min.js"></script>
+		
+		<!-- Bootstrap -->
+	    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+		
+		<!-- Slimscroll -->
+		<script src='/static/js/jquery.slimscroll.min.js'></script>
+		
+		<!-- Popup Overlay -->
+		<script src='/static/js/jquery.popupoverlay.min.js'></script>
+
+		<!-- Modernizr -->
+		<script src='/static/js/modernizr.min.js'></script>
+		
+		<!-- Simplify -->
+		<script src="/static/js/simplify/simplify.js"></script>
+
+        <!-- Layer -->
+        <script src="/static/js/layer.js"></script>
+
+        <script>
+
+            {% if error_exist %}
+                layer.open({title:'注册失败！',content:'{{ error_exist }}'});
+            {% endif %}
+            {% if error_submit %}
+                layer.open({title:'注册失败！',content:'{{ error_submit }}'});
+            {% endif %}
+
+            function check_password(){   //对用户注册时的输入情况进行检验，不正确时给出提示
+                document.getElementById("password_check").style.borderColor = "#e4e4e4";
+                if(document.getElementById("password").value.length < 6){
+                    document.getElementById("pw_warning").innerHTML = "密码长度至少为6位！请修改密码。";
+                    document.getElementById("warning").innerHTML = "   ";
+                    document.getElementById("password").style.borderColor = "red";
+                    $('#pw_icon').removeClass().addClass('fa fa-ban fa-lg');
+                    $('#pw_icon').css('color','red');
+                    $('#pw_check_icon').removeClass();
+                    return false
+                }else{
+                    document.getElementById("password").style.borderColor = "#e4e4e4";
+                    document.getElementById("pw_warning").innerHTML = "   ";
+                    if(document.getElementById("password").value!== document.getElementById("password_check").value) {
+                        document.getElementById("warning").innerHTML="密码输入不一致!";
+                        document.getElementById("password_check").style.borderColor = "red";
+                        $('#pw_check_icon').removeClass().addClass('fa fa-ban fa-lg');
+                        $('#pw_check_icon').css('color','red');
+                        $('#pw_icon').removeClass().addClass('fa fa-check fa-lg');
+                        $('#pw_icon').css('color','lawngreen');
+                        return false
+                    }
+                    else {
+                        document.getElementById("warning").innerHTML = "   ";
+                        document.getElementById("pw_warning").innerHTML = "   ";
+                        document.getElementById("password_check").style.borderColor = "#e4e4e4";
+                        $('#pw_icon').removeClass().addClass('fa fa-check fa-lg');
+                        $('#pw_icon').css('color','lawngreen');
+                        $('#pw_check_icon').removeClass().addClass('fa fa-check fa-lg');
+                        $('#pw_check_icon').css('color','lawngreen');
+                        return true;
+                    }
+                }
+            }
+
+            function username_check() {  // 对用户名是否已被注册进行检验
+                if ($('#username')[0].value===''){
+                    $('#name_icon').removeClass();
+                    $('#username_warning').html('');
+                    $('#username').css('borderColor','#e4e4e4');
+                }
+                else{
+                    var result = true;
+                    $.ajax({
+                    url:'',
+                    type: "GET",
+                    dataType:'json',
+                    data:{'username':$('#username')[0].value},
+                    progressData:false,
+                    async:false,
+                    success: function(data){
+                        if (data.username === $('#username')[0].value){
+                            $('#name_icon').removeClass().addClass('fa fa-ban fa-lg');
+                            $('#name_icon').css('color','red');
+                            $('#username_warning').html('该用户名已注册');
+                            $('#username').css('borderColor','red');
+                            result=false
+                        } else {
+                            $('#name_icon').removeClass().addClass('fa fa-check fa-lg');
+                            $('#name_icon').css('color','lawngreen');
+                            $('#username_warning').html('');
+                            $('#username').css('borderColor','#e4e4e4');
+                            result=true
+                        }
+                    },
+                    error: function(){
+                        layer.open({title:'失败',content:'上传失败'});
+                    }
+                    });
+                    return result
+                }}
+
+            function formsubmit() {
+                if (username_check()&&check_password()){
+                    $('#user_form').submit();
+                }else{
+                    if(username_check()){
+                        layer.open({title:'注册失败！',content:'密码填写错误,请检查密码输入。'});
+                    }else{
+                        if($('#username')[0].value===''){
+                            layer.open({title: '注册失败！', content: '用户名不能为空。'});
+                        }else {
+                            layer.open({title: '注册失败！', content: '该用户名已被其他用户注册，请修改用户名。'});
+                        }
+                    }
+                }
+
+            }
+
+        </script>
+	
+  	</body>
+</html>

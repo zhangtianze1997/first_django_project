@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  	<head>
+	    <meta charset="utf-8">
+	    <title>用户登录</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+
+	    <!-- Bootstrap core CSS -->
+	    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- Font Awesome -->
+		<link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+		<!-- ionicons -->
+		<link href="/static/css/ionicons.min.css" rel="stylesheet">
+		
+		<!-- Simplify -->
+		<link href="/static/css/simplify.min.css" rel="stylesheet">
+
+
+  	</head>
+
+  	<body class="overflow-hidden light-background" onkeydown="keylogin()">
+		<div class="wrapper no-navigation preload">
+			<div class="sign-in-wrapper">
+				<div class="sign-in-inner">
+					<div class="login-brand text-center">
+						<i class="fa fa-database m-right-xs"></i> A918问答系统 <strong class="text-skin">用户登录</strong>
+					</div>
+
+					<form id="form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+						<div class="form-group m-bottom-md">
+							<input type="text" name="username" id="username" class="form-control" placeholder="用户名">
+						</div>
+						<div class="form-group">
+							<input type="password" name="password" id="password" class="form-control" placeholder="密码">
+						</div>
+
+						<div class="form-group">
+							<div class="custom-checkbox">
+								<input type="checkbox" id="chkRemember" name="chkRemember">
+								<label for="chkRemember"></label>
+							</div>
+							Remember me
+						</div>
+
+						<div class="m-top-md p-top-sm">
+							<a onclick="post()" id="login" class="btn btn-success block">登录</a>
+						</div>
+
+						<div class="m-top-md p-top-sm">
+							<div class="font-12 text-center m-bottom-xs">
+								<a href="#" class="font-12">忘记密码?</a>
+							</div>
+							<div class="font-12 text-center m-bottom-xs">没有账号?</div>
+							<a href="../register/" class="btn btn-default block">注册</a>
+						</div>
+					</form>
+				</div><!-- ./sign-in-inner -->
+			</div><!-- ./sign-in-wrapper -->
+		</div><!-- /wrapper -->
+
+		<a href="" id="scroll-to-top" class="hidden-print"><i class="icon-chevron-up"></i></a>
+
+	    <!-- Le javascript
+	    ================================================== -->
+	    <!-- Placed at the end of the document so the pages load faster -->
+		
+		<!-- Jquery -->
+		<script src="/static/js/jquery-1.11.1.min.js"></script>
+		
+		<!-- Bootstrap -->
+	    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+		
+		<!-- Slimscroll -->
+		<script src='/static/js/jquery.slimscroll.min.js'></script>
+		
+		<!-- Popup Overlay -->
+		<script src='/static/js/jquery.popupoverlay.min.js'></script>
+
+		<!-- Modernizr -->
+		<script src='/static/js/modernizr.min.js'></script>
+		
+		<!-- Simplify -->
+		<script src="/static/js/simplify/simplify.js"></script>
+
+        <!-- Layer  -->
+        <script src="/static/js/layer.js"></script>
+
+        <script type="text/javascript">
+            {% if error %}
+                layer.open(
+                    {title:"登录失败", content:'{{ error }}'}
+                );
+            {% endif %}
+
+            function post() {
+                var form = document.getElementById("form");
+                form.submit();
+            }
+            function keylogin() {
+                //按回车登录
+                if (event.keyCode==13)
+                    document.getElementById('login').click();
+
+            }
+
+
+        </script>
+	
+  	</body>
+</html>

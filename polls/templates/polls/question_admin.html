@@ -1,0 +1,264 @@
+{% extends 'index.html' %}
+{% block css %}
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- ionicons -->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- Simplify -->
+    <link href="/static/css/simplify.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block main_area %}
+    <div class="main-container ">
+        <div class="inbox-wrapper">
+            <div class="inbox-body padding-md" style="margin-left: 0px">  <!-- inbox-body-->
+                <div class="row m-bottom-md">
+                    <div class="col-sm-6 m-bottom-sm">
+                        <h2 class="no-margin">
+                            问题
+                        </h2>
+                    </div><!-- ./col -->
+                    <div class="col-sm-6 text-right text-left-sm">
+
+                        <a href="../new/" class="btn btn-success hidden-xs">添加问题</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="question_delete()">删除问题</a>
+                    </div><!-- ./col -->
+                </div><!-- .row -->
+
+                <div class="pagination-row clearfix m-bottom-md">
+                    <div class="pull-left vertical-middle hidden-xs">{{ total }} questions in total</div>
+                    <div class="pull-right pull-left-sm">
+                        <div class="inline-block vertical-middle m-right-xs">Page {{ local_page }} of {{ pages }} </div>
+                        <ul class="pagination vertical-middle">
+                            <li name="step-backward"><a href="javascript:void(0)"><i class="fa fa-step-backward"></i></a></li>
+                            {% if local_page == pages %}
+                                {% if local_page|add:-4 > 0 %}<li name="local_left_3"><a href="javascript:window.location.href='../page'+({{ local_page }}-4)+'/'">{{ local_page|add:-4 }}</a></li>{% endif %}
+                                {% if local_page|add:-3 > 0 %}<li name="local_left_4"><a href="javascript:window.location.href='../page'+({{ local_page }}-3)+'/'">{{ local_page|add:-3 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page == pages|add:-1 %}
+                                {% if local_page|add:-3 > 0 %}<li name="local_left_4"><a href="javascript:window.location.href='../page'+({{ local_page }}-3)+'/'">{{ local_page|add:-3 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page|add:-2 > 0 %}<li name="local_left_2"><a href="javascript:window.location.href='../page'+({{ local_page }}-2)+'/'">{{ local_page|add:-2 }}</a></li>{% endif %}
+                            {% if local_page|add:-1 > 0 %}<li name="local_left_1"><a href="javascript:window.location.href='../page'+({{ local_page }}-1)+'/'">{{ local_page|add:-1 }}</a></li>{% endif %}
+                            <li name="localpage" class="active"><a href="javascript:void(0)" style="color: white">{{ local_page }}</a></li>
+                            {% if local_page|add:+1 <= pages %}<li name="local_right_1"><a href="javascript:window.location.href='../page'+({{ local_page }}+1)+'/'">{{ local_page|add:1 }}</a></li>{% endif %}
+                            {% if local_page|add:+2 <= pages %}<li name="local_right_2"><a href="javascript:window.location.href='../page'+({{ local_page }}+2)+'/'">{{ local_page|add:2 }}</a></li>{% endif %}
+                            {% if local_page == 1 %}
+                                {% if local_page|add:+3 <= pages %}<li name="local_right_3"><a href="javascript:window.location.href='../page'+({{ local_page }}+3)+'/'">{{ local_page|add:3 }}</a></li>{% endif %}
+                                {% if local_page|add:+4 <= pages %}<li name="local_right_4"><a href="javascript:window.location.href='../page'+({{ local_page }}+4)+'/'">{{ local_page|add:4 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page == 2 %}
+                                {% if local_page|add:+3 <= pages %}<li name="local_right_3"><a href="javascript:window.location.href='../page'+({{ local_page }}+3)+'/'">{{ local_page|add:3 }}</a></li>{% endif %}
+                            {% endif %}
+                            <li name="step-forward"><a href="javascript:void(0)"><i class="fa fa-step-forward"></i></a></li>
+
+                        </ul>
+                    </div>
+                </div><!-- ./pagination-row -->
+
+                <div class="message-table table-responsive" style="font-family: 微软雅黑; font-size: 14px">
+                    <table class="table table-bordereds" style="margin-bottom: 0px">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <div class="custom-checkbox">
+                                        <input type="checkbox" id="chkAll" class="inbox-check">
+                                        <label for="chkAll"></label>
+                                    </div>
+                                </th>
+                                <th style="width: 50%">题目</th>
+                                <th style="width: 30%">题型</th>
+                                <th style="width: 20%">上传时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if question_list %}
+                                {% for question in question_list %}
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-checkbox"><input type="checkbox" id="chk1" name="check_in_list" class="inbox-check"><label></label></div>
+                                        </td>
+
+                                        <td>
+                                            <div class="author-name" style="margin-left: 0px"><a href="javascript:void(0)"><strong class="block font-md">{{ question.question_content }}</strong></a></div>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)">
+                                                {{ question.question_name }}
+                                            </a>
+                                        </td>
+                                        <td>{{ question.date|date:"Y-m-d H:i:s" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+
+                        </tbody>
+                    </table>
+                </div><!-- ./message-table -->
+                <div class="pagination-row clearfix">
+                    <div class="pull-left vertical-middle hidden-xs">{{ total }} questions in total</div>
+                    <div class="pull-right pull-left-sm">
+                        <div class="inline-block vertical-middle m-right-xs">Page {{ local_page }} of {{ pages }} </div>
+                        <ul class="pagination vertical-middle">
+                            <li name="step-backward"><a href="javascript:void(0)"><i class="fa fa-step-backward"></i></a></li>
+                            {% if local_page == pages %}
+                                {% if local_page|add:-4 > 0 %}<li name="local_left_4"><a href="javascript:window.location.href='../page'+({{ local_page }}-4)+'/'">{{ local_page|add:-4 }}</a></li>{% endif %}
+                                {% if local_page|add:-3 > 0 %}<li name="local_left_3"><a href="javascript:window.location.href='../page'+({{ local_page }}-3)+'/'">{{ local_page|add:-3 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page == pages|add:-1 %}
+                                {% if local_page|add:-3 > 0 %}<li name="local_left_3"><a href="javascript:window.location.href='../page'+({{ local_page }}-3)+'/'">{{ local_page|add:-3 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page|add:-2 > 0 %}<li name="local_left_2"><a href="javascript:window.location.href='../page'+({{ local_page }}-2)+'/'">{{ local_page|add:-2 }}</a></li>{% endif %}
+                            {% if local_page|add:-1 > 0 %}<li name="local_left_1"><a href="javascript:window.location.href='../page'+({{ local_page }}-1)+'/'">{{ local_page|add:-1 }}</a></li>{% endif %}
+                            <li name="localpage" class="active"><a href="javascript:void(0)" style="color: white">{{ local_page }}</a></li>
+                            {% if local_page|add:+1 <= pages %}<li name="local_right_1"><a href="javascript:window.location.href='../page'+({{ local_page }}+1)+'/'">{{ local_page|add:1 }}</a></li>{% endif %}
+                            {% if local_page|add:+2 <= pages %}<li name="local_right_2"><a href="javascript:window.location.href='../page'+({{ local_page }}+2)+'/'">{{ local_page|add:2 }}</a></li>{% endif %}
+                            {% if local_page == 1 %}
+                                {% if local_page|add:+3 <= pages %}<li name="local_right_3"><a href="javascript:window.location.href='../page'+({{ local_page }}+3)+'/'">{{ local_page|add:3 }}</a></li>{% endif %}
+                                {% if local_page|add:+4 <= pages %}<li name="local_right_4"><a href="javascript:window.location.href='../page'+({{ local_page }}+4)+'/'">{{ local_page|add:4 }}</a></li>{% endif %}
+                            {% endif %}
+                            {% if local_page == 2 %}
+                                {% if local_page|add:+3 <= pages %}<li name="local_right_3"><a href="javascript:window.location.href='../page'+({{ local_page }}+3)+'/'">{{ local_page|add:3 }}</a></li>{% endif %}
+                            {% endif %}
+                            <li name="step-forward"><a href="javascript:void(0)"><i class="fa fa-step-forward"></i></a></li>
+                        </ul>
+                    </div>
+                </div><!-- ./pagination-row -->
+            </div><!-- ./inbox-body -->
+        </div><!-- ./inbox-wrapper -->
+    </div><!-- /main-container -->
+{% endblock %}
+
+{% block js %}
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- Jquery -->
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Slimscroll -->
+    <script src='/static/js/jquery.slimscroll.min.js'></script>
+
+    <!-- Popup Overlay -->
+    <script src='/static/js/jquery.popupoverlay.min.js'></script>
+
+    <!-- Modernizr -->
+    <script src='/static/js/modernizr.min.js'></script>
+
+    <!-- Simplify -->
+    <script src="/static/js/simplify/simplify.js"></script>
+
+
+    <script>
+        $(function()	{
+            $('.inbox-check').click(function()	{
+                var activeRow = $(this).parent().parent().parent();
+
+                activeRow.toggleClass('active');
+            });
+
+
+            $('#inboxCollapse').click(function()	{
+                $('.inbox-menu-inner').slideToggle();
+            });
+
+            $('#chkAll').click(function()	{
+                if($(this).prop('checked'))	{
+                    $('.inbox-check').prop('checked',true);
+                    $('.inbox-check').parent().parent().parent().addClass('active');
+                }
+                else	{
+                    $('.inbox-check').prop('checked',false);
+                    $('.inbox-check').parent().parent().parent().removeClass('active');
+                }
+            });
+
+            $(window).resize(function() {
+                if (Modernizr.mq('(min-width: 980px)')) {
+                    $('.inbox-menu ul').show();
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        document.getElementById('question').classList.add('active');  //左侧菜单对应页面的选项变成active
+        $("strong").each(function () {
+            var obj = $(this).html();
+            var reg = new RegExp("&lt;br&gt;","g");
+            obj = obj.replace(reg," ");
+            $(this).html(obj);
+        });
+
+        {% if question_list %}  // 为checkbox添加id等元素
+            var box_list= document.getElementsByClassName('custom-checkbox');
+            var table_list = document.getElementsByClassName('author-name');
+            var i=1;
+            {% for question in question_list %}
+                box_list[i].firstChild.id={{ question.id }};
+                box_list[i].lastChild.setAttribute('for',{{ question.id }});
+                table_list[i-1].firstChild.href='{{ question.id }}';
+                i++;
+            {% endfor %}
+        {% endif %}
+
+        for(var k=0;k<2;k++)   //上下页跳转链接
+        {
+            document.getElementsByName('step-backward')[k].firstChild.href='../page1/';
+            document.getElementsByName('step-forward')[k].firstChild.href='../page'+({{ pages }})+'/';
+
+            {% if local_page == 1 %}
+                document.getElementsByName('step-backward')[k].setAttribute('class','disabled');
+                document.getElementsByName('step-backward')[k].firstChild.href="javascript:void (0)";
+            {% endif %}
+            {% if local_page == pages %}
+                document.getElementsByName('step-forward')[k].setAttribute('class','disabled');
+                document.getElementsByName('step-forward')[k].firstChild.href="javascript:void (0)";
+            {% endif %}
+        }
+
+        function question_delete() {
+                var obj = document.getElementsByName('check_in_list'), check_val = [];
+
+                for (var i in obj){
+                    if(obj[i].checked){
+                        check_val.push(parseInt(obj[i].id))
+                    }
+                }
+                if (check_val.length==0){
+                    layer.open({title:'删除失败',content:'请点击问题前的方框选中问题。'})
+                }else{
+                    layer.open({title:'注意！',content:'确定要删除问题吗？',yes:function () {
+
+                $.ajax({
+                    url:'',
+                    type: "GET",
+                    dataType:'json',
+                    data:{'id':check_val},
+                    traditional:true,
+                    success:function () {
+                        layer.open({title:'成功',content:'删除成功',time:3000});
+                        setTimeout(location.reload(),"3000");
+
+                    }
+
+                })
+                }})
+                }
+
+
+        }
+
+
+    </script>
+{% endblock %}

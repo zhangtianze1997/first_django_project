@@ -1,0 +1,179 @@
+{% extends 'index.html' %}
+{% block css %}
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- ionicons -->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- Simplify -->
+    <link href="/static/css/simplify.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block main_area %}
+    <div class="main-container">
+        <div class="padding-md">
+            <ul class="breadcrumb">
+                <li><span class="primary-font"><i class="icon-home"></i></span><a href="{% url 'index' %}">主页</a></li>
+                <li><span class="primary-font"><i class="icon-home"></i></span><a href="{% url 'jump_question' %}">问题列表</a></li>
+                <li><span class="primary-font"><i class="icon-home"></i></span>添加问题</li>
+            </ul>
+
+
+            <div class="row">
+
+                <div class="col-md-6" style="width: 100%">
+                    <div class="smart-widget">
+                        <div class="smart-widget-header" style="font-size: 15px">
+                            添加问题
+                            <span class="smart-widget-option">
+                                <span class="refresh-icon-animated">
+                                    <i class="fa fa-circle-o-notch fa-spin"></i>
+                                </span>
+                                <a href="#" class="widget-toggle-hidden-option">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                <a href="#" class="widget-collapse-option" data-toggle="collapse">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+
+                            </span>
+                        </div>
+                        <div class="smart-widget-inner">
+                            <div class="smart-widget-hidden-section">
+                                <ul class="widget-color-list clearfix">
+                                    <li style="background-color:#20232b;" data-color="widget-dark"></li>
+                                    <li style="background-color:#4c5f70;" data-color="widget-dark-blue"></li>
+                                    <li style="background-color:#23b7e5;" data-color="widget-blue"></li>
+                                    <li style="background-color:#2baab1;" data-color="widget-green"></li>
+                                    <li style="background-color:#edbc6c;" data-color="widget-yellow"></li>
+                                    <li style="background-color:#fbc852;" data-color="widget-orange"></li>
+                                    <li style="background-color:#e36159;" data-color="widget-red"></li>
+                                    <li style="background-color:#7266ba;" data-color="widget-purple"></li>
+                                    <li style="background-color:#f5f5f5;" data-color="widget-light-grey"></li>
+                                    <li style="background-color:#fff;" data-color="reset"></li>
+                                </ul>
+                            </div>
+                            <div class="smart-widget-body" style="font-family: 微软雅黑">
+                                <form id="question_form" class="form-horizontal m-top-md" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">题型</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="name" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">题目内容</label>
+                                        <div class="col-sm-9">
+                                            <textarea rows="4" id="content" class="form-control" style="resize: none" name="content" ></textarea>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-top-lg">
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <button class="btn btn-info" id="submitbutton" type="button" >提交题目</button>
+                                            <button class="btn btn-danger" id="resetbutton" type="reset" >重置</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div><!-- ./smart-widget-inner -->
+                    </div><!-- ./smart-widget -->
+                </div><!-- /.col-->
+            </div><!-- /.row -->
+        </div><!-- /.padding-md -->
+    </div><!-- /main-container -->
+
+{% endblock %}
+
+{% block js %}
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- Jquery -->
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Popup Overlay -->
+    <script src='/static/js/jquery.popupoverlay.min.js'></script>
+
+    <!-- Parsley -->
+    <script src="/static/js/parsley.min.js"></script>
+
+    <!-- Slimscroll -->
+    <script src='/static/js/jquery.slimscroll.min.js'></script>
+
+    <!-- Modernizr -->
+    <script src='/static/js/modernizr.min.js'></script>
+
+    <!-- Simplify -->
+    <script src="/static/js/simplify/simplify.js"></script>
+
+    <!-- Layer -->
+    <script src="/static/js/layer.js"></script>
+
+    <script>
+        document.getElementById('question').classList.add('active');  //左侧菜单对应页面的选项变成active
+
+
+        $('#submitbutton').click('on',function () {
+            $.ajax( {
+                url:'',
+                type: "POST",
+                dataType:'json',
+                data:$('#question_form').serialize(),
+                success: function(data){
+                    if(data.result === 'success'){
+                        layer.open({title:'成功',content:'创建成功！',yes:window.location.href='../',cancel:window.location.href='../'});
+                    }else{
+                        layer.open({title:'失败',content:data.result})
+                    }
+
+                }
+            })
+        });
+
+
+        $(function()	{
+            //Delete Widget Confirmation
+            $('#deleteWidgetConfirm').popup({
+                vertical: 'top',
+                pagecontainer: '.container',
+                transition: 'all 0.3s'
+            });
+
+            //Form Validation
+
+            $('#formValidate2').parsley( { listeners: {
+                onFieldValidate: function ( elem ) {
+                    // if field is not visible, do not apply Parsley validation!
+                    if ( !$( elem ).is( ':visible' ) ) {
+                        return true;
+                    }
+
+                    return false;
+                },
+                onFormSubmit: function ( isFormValid, event ) {
+                    if(isFormValid)	{
+                        alert('Your message has been sent');
+                        return false;
+                    }
+                }
+            }});
+        });
+    </script>
+{% endblock %}
+

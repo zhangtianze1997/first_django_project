@@ -1,0 +1,240 @@
+{% extends 'index.html' %}
+{% block css %}
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- ionicons -->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- Simplify -->
+    <link href="/static/css/simplify.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block main_area %}
+    <div class="main-container" style="font-family: 微软雅黑">
+        <div class="padding-md">
+            <ul class="breadcrumb">
+                <li><span class="primary-font"><i class="icon-home"></i></span><a href="{% url 'index'%}"> 主页</a></li>
+                <li>搜索结果</li>
+            </ul>
+
+            <h3 class="header-text m-top-lg">搜索结果</h3>
+            <div class="smart-widget" style="font-size: 14px">
+                <div class="smart-widget-header">
+                    问题
+                    <span class="smart-widget-option">
+                        <span class="refresh-icon-animated">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
+                        <a href="#" class="widget-toggle-hidden-option">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <a href="#" class="widget-collapse-option" data-toggle="collapse">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+
+                    </span>
+                </div>
+                <div class="smart-widget-inner">
+                    <div class="smart-widget-hidden-section">
+                        <ul class="widget-color-list clearfix">
+                            <li style="background-color:#20232b;" data-color="widget-dark"></li>
+                            <li style="background-color:#4c5f70;" data-color="widget-dark-blue"></li>
+                            <li style="background-color:#23b7e5;" data-color="widget-blue"></li>
+                            <li style="background-color:#2baab1;" data-color="widget-green"></li>
+                            <li style="background-color:#edbc6c;" data-color="widget-yellow"></li>
+                            <li style="background-color:#fbc852;" data-color="widget-orange"></li>
+                            <li style="background-color:#e36159;" data-color="widget-red"></li>
+                            <li style="background-color:#7266ba;" data-color="widget-purple"></li>
+                            <li style="background-color:#f5f5f5;" data-color="widget-light-grey"></li>
+                            <li style="background-color:#fff;" data-color="reset"></li>
+                        </ul>
+                    </div>
+                    <div class="smart-widget-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%">#</th>
+                                    <th style="width: 40%">题目内容</th>
+                                    <th style="width: 20%">题型</th>
+                                    <th style="width: 30%">上传时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if question_list %}
+                                {% for question in question_list %}
+                                    <tr style="cursor: pointer" onclick= "window.location.href='../../question/page1/{{ question.id }}'">
+                                        <td>{{forloop.counter}}</td>
+                                        <td><a name="question_content">{{ question.question_content }}</a></td>
+                                        <td>{{ question.question_name }}</td>
+                                        <td>{{ question.date|date:"Y-m-d H:i:s" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- ./smart-widget-inner -->
+            </div><!-- ./smart-widget -->
+
+            <div class="smart-widget" style="font-size: 14px">
+                <div class="smart-widget-header">
+                    用户账号
+                    <span class="smart-widget-option">
+                        <span class="refresh-icon-animated">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
+                        <a href="#" class="widget-toggle-hidden-option">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <a href="#" class="widget-collapse-option" data-toggle="collapse">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="smart-widget-inner">
+                    <div class="smart-widget-hidden-section">
+                        <ul class="widget-color-list clearfix">
+                            <li style="background-color:#20232b;" data-color="widget-dark"></li>
+                            <li style="background-color:#4c5f70;" data-color="widget-dark-blue"></li>
+                            <li style="background-color:#23b7e5;" data-color="widget-blue"></li>
+                            <li style="background-color:#2baab1;" data-color="widget-green"></li>
+                            <li style="background-color:#edbc6c;" data-color="widget-yellow"></li>
+                            <li style="background-color:#fbc852;" data-color="widget-orange"></li>
+                            <li style="background-color:#e36159;" data-color="widget-red"></li>
+                            <li style="background-color:#7266ba;" data-color="widget-purple"></li>
+                            <li style="background-color:#f5f5f5;" data-color="widget-light-grey"></li>
+                            <li style="background-color:#fff;" data-color="reset"></li>
+                        </ul>
+                    </div>
+                    <div class="smart-widget-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%">#</th>
+                                    <th style="width: 40%">用户名</th>
+                                    <th style="width: 20%">姓名</th>
+                                    <th style="width: 30%">专业</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if user_list %}
+                                {% for user in user_list %}
+                                    <tr style="cursor: pointer" onclick="window.location.href='../../accounts/{{ user.id }}'">
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.major }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- ./smart-widget-inner -->
+            </div><!-- ./smart-widget -->
+
+            <div class="smart-widget" style="font-size: 14px">
+                <div class="smart-widget-header">
+                    用户姓名
+                    <span class="smart-widget-option">
+                        <span class="refresh-icon-animated">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
+                        <a href="#" class="widget-toggle-hidden-option">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <a href="#" class="widget-collapse-option" data-toggle="collapse">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="smart-widget-inner">
+                    <div class="smart-widget-hidden-section">
+                        <ul class="widget-color-list clearfix">
+                            <li style="background-color:#20232b;" data-color="widget-dark"></li>
+                            <li style="background-color:#4c5f70;" data-color="widget-dark-blue"></li>
+                            <li style="background-color:#23b7e5;" data-color="widget-blue"></li>
+                            <li style="background-color:#2baab1;" data-color="widget-green"></li>
+                            <li style="background-color:#edbc6c;" data-color="widget-yellow"></li>
+                            <li style="background-color:#fbc852;" data-color="widget-orange"></li>
+                            <li style="background-color:#e36159;" data-color="widget-red"></li>
+                            <li style="background-color:#7266ba;" data-color="widget-purple"></li>
+                            <li style="background-color:#f5f5f5;" data-color="widget-light-grey"></li>
+                            <li style="background-color:#fff;" data-color="reset"></li>
+                        </ul>
+                    </div>
+                    <div class="smart-widget-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%">#</th>
+                                    <th style="width: 40%">姓名</th>
+                                    <th style="width: 20%">用户名</th>
+                                    <th style="width: 30%">专业</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if name_list %}
+                                {% for user in name_list %}
+                                    <tr style="cursor: pointer" onclick="window.location.href='../../accounts/{{ user.user_id }}'" >
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.major }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- ./smart-widget-inner -->
+            </div><!-- ./smart-widget -->
+        </div><!-- ./padding-md -->
+    </div><!-- /main-container -->
+{% endblock %}
+			
+{% block js %}
+    <!-- Jquery -->
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Slimscroll -->
+    <script src='/static/js/jquery.slimscroll.min.js'></script>
+
+    <!-- Popup Overlay -->
+    <script src='/static/js/jquery.popupoverlay.min.js'></script>
+
+    <!-- Modernizr -->
+    <script src='/static/js/modernizr.min.js'></script>
+
+    <!-- Simplify -->
+    <script src="/static/js/simplify/simplify.js"></script>
+
+    <script>
+        $(function()	{
+            //Delete Widget Confirmation
+            $('#deleteWidgetConfirm').popup({
+                vertical: 'top',
+                pagecontainer: '.container',
+                transition: 'all 0.3s'
+            });
+        });
+
+        $("[name='question_content']").each(function () {
+            var obj = $(this).html();
+            var reg = new RegExp("&lt;br&gt;","g");
+            obj = obj.replace(reg," ");
+            $(this).html(obj);
+        });
+    </script>
+{% endblock %}
+
+	
+
