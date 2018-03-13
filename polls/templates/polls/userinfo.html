@@ -28,8 +28,16 @@
     <style>
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0;
+            -webkit-appearance: none !important;
+            margin: 0;
+        }
+        input::-webkit-input-placeholder {
+        color: #999;
+        -webkit-transition: color.5s;
+        }
+        input:focus::-webkit-input-placeholder, input:hover::-webkit-input-placeholder {
+        color: #c2c2c2;
+        -webkit-transition: color.5s;
         }
     </style>
 
@@ -47,19 +55,24 @@
                     <div class="row">
                         <div class="col-sm-4 col-md-12">
                             <div class="user-profile-pic">
-                                <img src="/static/images/profile/profile1.jpg" id="userimg" alt="" width="290px" height="290px">
+                                <img src="/static/images/profile/profile1.jpg" id="userimg" alt="" width="290px"
+                                     height="290px">
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-12">
-                            <div class="user-name m-top-sm" style="font-size: 30px"><span id="name_left">{% if name %}{{ name }}{% else %}问答系统用户{% endif %}</span>
+                            <div class="user-name m-top-sm" style="font-size: 30px"><span id="name_left">{% if name %}
+                                {{ name }}{% else %}问答系统用户{% endif %}</span>
                                 <span>{% if gender %}
                                     {% if gender == 'man' %}
-                                        <i class="fa fa-mars m-left-xs font-30" style="color: #00c8ff" id="gender_left"></i>
+                                        <i class="fa fa-mars m-left-xs font-30" style="color: #00c8ff"
+                                           id="gender_left"></i>
                                     {% else %}
-                                        <i class="fa fa-venus m-left-xs font-30" style="color: #fd59b0"  id="gender_left"></i>
+                                        <i class="fa fa-venus m-left-xs font-30" style="color: #fd59b0"
+                                           id="gender_left"></i>
                                     {% endif %}
                                 {% else %}
-                                    <i class="fa fa-venus-mars m-left-xs font-30" style="color: #a40dff"  id="gender_left"></i>
+                                    <i class="fa fa-venus-mars m-left-xs font-30" style="color: #a40dff"
+                                       id="gender_left"></i>
                                 {% endif %}</span>
                             </div>
 
@@ -112,51 +125,57 @@
                             </div>
 
                             <div class="m-top-sm text-centers">
-                                <a class="btn btn-success" onclick="$('#table2').click();"><i class="fa fa-edit m-right-xs"></i>编辑信息</a>
+                                <a class="btn btn-success" onclick="$('#table2').click()"><i
+                                        class="fa fa-edit m-right-xs"></i>编辑信息</a>
                                 <a class="btn btn-info" id="up-img-touch"><i class="fa fa-photo m-right-xs"></i>上传头像</a>
+                                <a class="btn btn-info" onclick="change_password()" style="margin-top: 5px"><i class="fa fa-key m-right-xs"></i>修改密码</a>
+                                <a class="btn btn-success" onclick="$('#table5').click()" style="margin-top: 5px"><i class="fa fa-folder m-right-xs" style="width: 15px"></i>我的收藏</a>
                             </div>
 
                             <div class="am-modal am-modal-no-btn up-frame-bj " tabindex="-1" id="doc-modal-1">
                                 <div class="am-modal-dialog up-frame-parent up-frame-radius">
-                                <div class="am-modal-hd up-frame-header">
-                                    <label>修改头像</label>
-                                    <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-                                </div>
-                                <div class="am-modal-bd  up-frame-body">
-                                  <div class="am-g am-fl">
-                                    <div class="am-form-group am-form-file">
-                                      <div class="am-fl">
-                                        <button type="button" class="am-btn am-btn-default am-btn-sm">
-                                          <i class="am-icon-cloud-upload"></i> 选择要上传的图片</button>
-                                          <a>滚轮缩放图片，移动鼠标选择区域</a>
-                                      </div>
-                                      <input type="file" id="inputImage" multiple>
+                                    <div class="am-modal-hd up-frame-header">
+                                        <label>修改头像</label>
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
                                     </div>
-                                  </div>
-                                  <div class="am-g am-fl" >
-                                    <div class="up-pre-before up-frame-radius">
-                                        <img alt="" src="" id="image" >
-                                    </div>
-                                    <div class="up-pre-after up-frame-radius">
-                                    </div>
-                                  </div>
-                                  <div class="am-g am-fl">
-                                    <div class="up-control-btns">
-                                        <span class="am-icon-rotate-left"  onclick="rotateimgleft()"></span>
-                                        <span class="am-icon-rotate-right" onclick="rotateimgright()"></span>
-                                        <span class="am-icon-check" id="up-btn-ok" url="{% url 'ajax' %}"></span>
-                                    </div>
-                                  </div>
+                                    <div class="am-modal-bd  up-frame-body">
+                                        <div class="am-g am-fl">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="am-fl">
+                                                    <button type="button" class="am-btn am-btn-default am-btn-sm">
+                                                        <i class="am-icon-cloud-upload"></i> 选择要上传的图片
+                                                    </button>
+                                                    <a>滚轮缩放图片，移动鼠标选择区域</a>
+                                                </div>
+                                                <input type="file" id="inputImage" multiple>
+                                            </div>
+                                        </div>
+                                        <div class="am-g am-fl">
+                                            <div class="up-pre-before up-frame-radius">
+                                                <img alt="" src="" id="image">
+                                            </div>
+                                            <div class="up-pre-after up-frame-radius">
+                                            </div>
+                                        </div>
+                                        <div class="am-g am-fl">
+                                            <div class="up-control-btns">
+                                                <span class="am-icon-rotate-left" onclick="rotateimgleft()"></span>
+                                                <span class="am-icon-rotate-right" onclick="rotateimgright()"></span>
+                                                <span class="am-icon-check" id="up-btn-ok"
+                                                      url="{% url 'user_img_ajax' %}"></span>
+                                            </div>
+                                        </div>
 
+                                    </div>
                                 </div>
-                              </div>
                             </div>
 
                             <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
                                 <div class="am-modal-dialog">
                                     <div class="am-modal-hd">正在上传...</div>
                                     <div class="am-modal-bd">
-                                    <span class="am-icon-spinner am-icon-spin"></span>
+                                        <span class="am-icon-spinner am-icon-spin"></span>
                                     </div>
                                 </div>
                             </div>
@@ -164,13 +183,13 @@
                             <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
                                 <div class="am-modal-dialog">
                                     <div class="am-modal-hd">信息</div>
-                                    <div class="am-modal-bd"  id="alert_content">
-                                          成功了
+                                    <div class="am-modal-bd" id="alert_content">
+                                        成功了
                                     </div>
                                     <div class="am-modal-footer">
                                         <span class="am-modal-btn">确定</span>
                                     </div>
-                              </div>
+                                </div>
                             </div>
 
 
@@ -183,9 +202,8 @@
 
                             <h4 class="m-top-md m-bottom-sm">社交网络</h4>
 
-                            <a class="social-link rss-hover"><i class="fa fa-qq"></i></a>
-                            <a class="social-link twitter-hover"><i class="fa fa-twitter"></i></a>
-                            <a class="social-link pinterest-hover"><i class="fa fa-pinterest"></i></a>
+                            <a class="social-link rss-hover" id="qq_link" href="tencent://message/?uin={{ qq }}&Site=&Menu=yes"><i class="fa fa-qq"></i></a>
+                            <a class="social-link pinterest-hover" id="github_link" href='https://github.com/{{ github }}' target="_blank"><i class="fa fa-github"></i></a>
 
                         </div>
                     </div><!-- ./row -->
@@ -194,6 +212,12 @@
                     <div class="smart-widget">
                         <div class="smart-widget-inner">
                             <ul class="nav nav-tabs tab-style2 tab-right bg-grey">
+                                <li>
+                                    <a href="#profileTab5" data-toggle="tab" id="table5">
+                                        <span class="icon-wrapper"><i class="fa fa-folder"></i></span>
+                                        <span class="text-wrapper">我的收藏</span>
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="#profileTab4" data-toggle="tab" id="table4">
                                         <span class="icon-wrapper"><i class="fa fa-heart"></i></span>
@@ -207,7 +231,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#profileTab2" data-toggle="tab" id="table2" >
+                                    <a href="#profileTab2" data-toggle="tab" id="table2">
                                         <span class="icon-wrapper"><i class="fa fa-book"></i></span>
                                         <span class="text-wrapper">用户资料</span>
                                     </a>
@@ -229,107 +253,82 @@
                                             <div class="col-sm-3 col-sm-6s">
                                                 <div class="m-bottom-md">
                                                     <div class="text-center">HTML5</div>
-                                                    <div class="chart profile-skill chart-skill-red center-block" data-percent="73">73%</div>
+                                                    <div class="chart profile-skill chart-skill-red center-block"
+                                                         data-percent="73">73%
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 col-sm-6s">
                                                 <div class="m-bottom-md">
                                                     <div class="text-center">CSS</div>
-                                                    <div class="chart profile-skill chart-skill-blue center-block" data-percent="54">54%</div>
+                                                    <div class="chart profile-skill chart-skill-blue center-block"
+                                                         data-percent="54">54%
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 col-sms-6">
                                                 <div class="m-bottom-md">
                                                     <div class="text-center">Jquery</div>
-                                                    <div class="chart profile-skill chart-skill-green center-block" data-percent="89">89%</div>
+                                                    <div class="chart profile-skill chart-skill-green center-block"
+                                                         data-percent="89">89%
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 col-sm-6s">
                                                 <div class="m-bottom-md">
                                                     <div class="text-center">PHP</div>
-                                                    <div class="chart profile-skill chart-skill-purple center-block" data-percent="92">92%</div>
+                                                    <div class="chart profile-skill chart-skill-purple center-block"
+                                                         data-percent="92">92%
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div><!-- ./row -->
 
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <h4 class="m-top-md">Recent Activity</h4>
+                                                <h4 class="m-top-md">近期动态</h4>
 
-                                                <div class="recent-activity-list">
+                                                <div class="recent-activity-list" style="font-size: 15px;font-family: 微软雅黑">
                                                     <ul>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="/static/images/profile/profile3.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Karen Martin</span> started following <span class="font-semi-bold">Jame Smith</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile3.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Karen Martin</span> just added <span class="font-semi-bold">Simplify Admin</span> to dashboard.
-                                                                <small class="text-muted block">3 hrs ago </small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile5.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Sarah Garcia</span> added new photo
-                                                                <small class="text-muted block">Yesterday</small>
+                                                        {% if action_list %}
+                                                            {% for action in action_list %}
+                                                                <li>
+                                                                    <div class="activity-detail">
+                                                                        <span class="font-semi-bold">{% if name %}{{ name }}
+                                                                            {% else %}{{ username }}{% endif %}
+                                                                        </span> {% if action.action == 'follow'%}关注了 <a href="../{{ action.object_id }}"><span  class="font-semi-bold">{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'comment'%}评价了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold" >{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'collect'%}收藏了 <span class="font-semi-bold">{{ action.object_id }}个问题</span>
+                                                                                {% elif action.action == 'revise'%}修改了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold" >{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'submit'%}回答了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold">{{ action.object_content }}</span></a>
+                                                                        {% endif %}
+                                                                        <small class="text-muted block" id="action{{ action.id }}"></small>
+                                                                        <script> // 利用时间戳计算操作距今时间
+                                                                            var offset = parseInt(Date.now()/1000)-{{ action.time }}
+                                                                            if(offset<60){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=offset+'秒前'
+                                                                            }else if(offset<3600){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/60)+'分钟前'
+                                                                            }else if(offset<86400){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/3600)+'小时前'
+                                                                            }else{
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/86400)+'天前'
+                                                                            }
+                                                                        </script>
+                                                                    </div>
+                                                                </li>
+                                                            {% endfor %}
+                                                        {% endif %}
 
-                                                                <div class="m-top-sm">
-                                                                    <img src="images/img11.jpg" alt="">
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile4.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Jame Smith</span> started following <span class="font-semi-bold">Karen Martin</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile6.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Chistopher Brown</span> just purchased <span class="font-semi-bold">your item</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile7.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Elizabeth Carter</span> uploaded <a class="font-semi-bold">3 photos</a>.
-                                                                <small class="text-muted block">36 mins ago</small>
-
-                                                                <ul class="uploaded-photo-list m-top-sm clearfix">
-                                                                    <li><a href="#"><img src="images/gallery/gallery4.jpg" alt=""></a></li>
-                                                                    <li><a href="#"><img src="images/gallery/gallery5.jpg" alt=""></a></li>
-                                                                    <li><a href="#"><img src="images/gallery/gallery6.jpg" alt=""></a></li>
-                                                                </ul><!-- ./upload-photo-list -->
-                                                            </div>
-                                                        </li>
                                                     </ul>
                                                 </div><!-- ./.recent-activity-list -->
                                             </div><!-- ./col -->
                                             <div class="col-lg-6">
-                                                <h4 class="m-top-md">User Statistic</h4>
+                                                <h4 class="m-top-md">用户数据</h4>
 
                                                 <div class="row m-top-md">
-                                                    <div class="col-sm-6" style="cursor: pointer" onclick="$('#table4').click();">
+                                                    <div class="col-sm-6" style="cursor: pointer"
+                                                         onclick="$('#table4').click();">
                                                         <div class="widget-stat3 bg-primary">
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-heart fa-3x"></i>
@@ -343,15 +342,17 @@
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-twitter fa-3x"></i>
                                                             </div>
-                                                            <small class="text-upper">Follower</small>
-                                                            <h3 class="no-margin">981</h3>
+                                                            <small class="text-upper">回答</small>
+                                                            <h3 class="no-margin">{{ answer_total }}</h3>
                                                         </div>
                                                     </div><!-- ./col -->
                                                 </div>
 
                                                 <div class="row">
-                                                    <div class="col-sm-6" style="cursor: pointer" onclick="$('#table3').click()">
-                                                        <div class="widget-stat3 text-white" style="background-color:#ea4c89;">
+                                                    <div class="col-sm-6" style="cursor: pointer"
+                                                         onclick="$('#table3').click()">
+                                                        <div class="widget-stat3 text-white"
+                                                             style="background-color:#ea4c89;">
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-user fa-3x"></i>
                                                             </div>
@@ -364,53 +365,33 @@
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-eye fa-3x"></i>
                                                             </div>
-                                                            <small class="text-upper">Visit</small>
-                                                            <h3 class="no-margin">2176</h3>
+                                                            <small class="text-upper">访客</small>
+                                                            <h3 class="no-margin">{{ visit }}</h3>
                                                         </div>
                                                     </div><!-- ./col -->
                                                 </div><!-- ./row -->
 
-                                                <div class="panel panel-default m-top-md">
-                                                    <div class="panel-heading">
-                                                        <i class="fa fa-twitter"></i> Latest Tweets
-                                                    </div>
-                                                    <ul class="list-group">
-                                                        <li class="list-group-item">
-                                                            <p>Welcome <a href="#" class="text-info">@John Doe</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 6 minutes ago
-                                                            </small>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="#" class="text-info">@Jand Doe</a></p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 41 minutes ago
-                                                            </small>
-                                                        </li>
-                                                        <li class="list-group-item"> <p><a href="#" class="text-info">@Bill Doe</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eros nibh, viverra a dui a, gravida varius velit.</p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 1 hour ago
-                                                            </small>
-                                                        </li>
-                                                    </ul><!-- /list-group -->
-                                                </div><!-- ./panel -->
                                             </div><!-- ./col -->
                                         </div><!-- ./row -->
                                     </div><!-- ./tab-pane -->
-                                    <div class="tab-pane fade" id="profileTab2" style="font-family:微软雅黑; font-size: 10px">
+                                    <div class="tab-pane fade" id="profileTab2"
+                                         style="font-family:微软雅黑; font-size: 10px">
                                         <h4 class="header-text m-top-md">个人信息</h4>
-                                        <form id="info_form" class="form-horizontal m-top-md" method="post" enctype="multipart/form-data">
+                                        <form id="info_form" class="form-horizontal m-top-md" method="post"
+                                              enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">姓名</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="name" value="{{ name }}">
+                                                    <input type="text" class="form-control" name="name"
+                                                           value="{{ name }}">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">学号</label>
                                                 <div class="col-sm-9">
-                                                    <input type="number" class="form-control" name="number" value="{{ number }}">
+                                                    <input type="number" class="form-control" name="number"
+                                                           value="{{ number }}">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -418,14 +399,18 @@
                                                 <div class="col-sm-9">
                                                     <div class="radio inline-block">
                                                         <div class="custom-radio m-right-xs">
-                                                            <input type="radio" id="inlineRadio1" value="man" name="profileGender" {% if gender == 'man'%}checked='checked'{% endif %}>
+                                                            <input type="radio" id="inlineRadio1" value="man"
+                                                                   name="profileGender"
+                                                                   {% if gender == 'man' %}checked='checked'{% endif %}>
                                                             <label for="inlineRadio1"></label>
                                                         </div>
                                                         <div class="inline-block vertical-top">男</div>
                                                     </div>
                                                     <div class="radio inline-block m-left-sm">
                                                         <div class="custom-radio m-right-xs">
-                                                            <input type="radio" id="inlineRadio2" value="woman" name="profileGender" {% if gender == 'woman'%}checked='checked'{% endif %}>
+                                                            <input type="radio" id="inlineRadio2" value="woman"
+                                                                   name="profileGender"
+                                                                   {% if gender == 'woman' %}checked='checked'{% endif %}>
                                                             <label for="inlineRadio2"></label>
                                                         </div>
                                                         <div class="inline-block vertical-top">女</div>
@@ -436,43 +421,66 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">家庭住址</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address" value="{{ address }}">
+                                                    <input type="text" class="form-control" name="address"
+                                                           value="{{ address }}">
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">电话号码</label>
                                                 <div class="col-sm-9">
-                                                    <input type="number" class="form-control" name="phone" value="{{ phone }}">
+                                                    <input type="number" class="form-control" name="phone"
+                                                           value="{{ phone }}">
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">专业</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="major" value="{{ major }}">
+                                                    <input type="text" class="form-control" name="major"
+                                                           value="{{ major }}">
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">邮箱</label>
                                                 <div class="col-sm-9">
-                                                    <input type="email" class="form-control" name="email" value="{{ email }}">
+                                                    <input type="email" class="form-control" name="email"
+                                                           value="{{ email }}">
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">描述一下自己</label>
                                                 <div class="col-sm-9">
-                                                    <textarea rows="4" id="about_me" class="form-control" style="resize: none" name="about_me" ></textarea>
+                                                    <textarea rows="4" id="about_me" class="form-control"
+                                                              style="resize: none" name="about_me" maxlength="200"></textarea>
                                                 </div>
                                             </div>
+                                            <h4 class="header-text m-top-md">社交账户</h4>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">QQ</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="qq"
+                                                           value="{{ qq }}" placeholder="QQ账号">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Github</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="github"
+                                                           value="{{ github }}" placeholder="Github用户名">
+                                                </div>
+                                            </div>
+
 
                                             <div class="form-group m-top-lg">
                                                 <label class="col-sm-3 control-label"></label>
                                                 <div class="col-sm-9">
                                                     <a class="btn btn-default" id="infosubmit">提交</a>
-                                                    <a class="btn btn-info m-left-xs" onclick="$('#table1').click();">取消</a>
+                                                    <a class="btn btn-info m-left-xs"
+                                                       onclick="$('#table1').click();">取消</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -488,20 +496,36 @@
                                                                 <div class="panel-body">
                                                                     <div class="user-wrapper">
                                                                         <div class="user-avatar">
-                                                                            <img class="small-img img-circle img-thumbnail" src="images/profile/profile2.jpg" alt="">
+                                                                            <img class="small-img img-circle img-thumbnail"
+                                                                                 src="images/profile/profile2.jpg"
+                                                                                 alt="">
                                                                         </div>
                                                                         <div class="user-detail small-img">
                                                                             <div class="font-16">{{ followed.username }}</div>
-                                                                            <small class="block text-muted font-12" style="height: 16.8px">{{ followed.name }}</small>
-                                                                            <small class="block text-muted font-12" style="height: 16.8px">{{ followed.major }}</small>
+                                                                            <small class="block text-muted font-12"
+                                                                                   style="height: 16.8px">{{ followed.name }}</small>
+                                                                            <small class="block text-muted font-12"
+                                                                                   style="height: 16.8px">{{ followed.major }}</small>
 
                                                                             <div class="m-top-sm">
                                                                                 {% if followed.relation == 'follow' %}
-                                                                                    <button type="button" class="follow btn btn-default btn-sm marginTB-xs" id="{{ followed.user_id}}" data-toggle="modal">关注中</button>
+                                                                                    <button type="button"
+                                                                                            class="follow btn btn-default btn-sm marginTB-xs"
+                                                                                            id="{{ followed.user_id }}"
+                                                                                            data-toggle="modal">关注中
+                                                                                    </button>
                                                                                 {% else %}
-                                                                                    <button type="button" class="follow btn btn-primary btn-sm marginTB-xs" id="{{ followed.user_id}}" data-toggle="modal">关注</button>
+                                                                                    <button type="button"
+                                                                                            class="follow btn btn-primary btn-sm marginTB-xs"
+                                                                                            id="{{ followed.user_id }}"
+                                                                                            data-toggle="modal">关注
+                                                                                    </button>
                                                                                 {% endif %}
-                                                                                <button type="button" class="btn btn-success btn-sm marginTB-xs" onclick="window.location.href='../{{ followed.user_id }}/'" data-toggle="modal">查看用户资料</button>
+                                                                                <button type="button"
+                                                                                        class="btn btn-success btn-sm marginTB-xs"
+                                                                                        onclick="window.location.href='../{{ followed.user_id }}/'"
+                                                                                        data-toggle="modal">查看用户资料
+                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div><!-- ./user-wrapper -->
@@ -514,10 +538,14 @@
 
                                         </div><!-- ./profile-follower-list -->
                                         <div class="pagination-row clearfix">
-                                            <div class="pull-left vertical-middle hidden-xs">共有{{ followed_total }}粉丝</div>
+                                            <div class="pull-left vertical-middle hidden-xs">共有{{ followed_total }}粉丝
+                                            </div>
                                             <div class="pull-right pull-left-sm">
-                                                <div class="inline-block vertical-middle m-right-xs">共{{ followed_pages_total }}页 </div>
-                                                <ul class="pagination vertical-middle" id="page_followed" style="margin: 0px">
+                                                <div class="inline-block vertical-middle m-right-xs">
+                                                    共{{ followed_pages_total }}页
+                                                </div>
+                                                <ul class="pagination vertical-middle" id="page_followed"
+                                                    style="margin: 0px">
                                                 </ul>
                                             </div>
                                         </div><!-- ./pagination-row -->
@@ -533,20 +561,36 @@
                                                                 <div class="panel-body">
                                                                     <div class="user-wrapper">
                                                                         <div class="user-avatar">
-                                                                            <img class="small-img img-circle img-thumbnail" src="images/profile/profile2.jpg" alt="">
+                                                                            <img class="small-img img-circle img-thumbnail"
+                                                                                 src="images/profile/profile2.jpg"
+                                                                                 alt="">
                                                                         </div>
                                                                         <div class="user-detail small-img">
                                                                             <div class="font-16">{{ following.username }}</div>
-                                                                            <small class="block text-muted font-12" style="height: 16.8px">{{ following.name }}</small>
-                                                                            <small class="block text-muted font-12" style="height: 16.8px">{{ following.major }}</small>
+                                                                            <small class="block text-muted font-12"
+                                                                                   style="height: 16.8px">{{ following.name }}</small>
+                                                                            <small class="block text-muted font-12"
+                                                                                   style="height: 16.8px">{{ following.major }}</small>
 
                                                                             <div class="m-top-sm">
                                                                                 {% if following.relation == 'follow' %}
-                                                                                    <button type="button" class="follow btn btn-default btn-sm marginTB-xs" id="{{ following.user_id}}" data-toggle="modal">关注中</button>
+                                                                                    <button type="button"
+                                                                                            class="follow btn btn-default btn-sm marginTB-xs"
+                                                                                            id="{{ following.user_id }}"
+                                                                                            data-toggle="modal">关注中
+                                                                                    </button>
                                                                                 {% else %}
-                                                                                    <button type="button" class="follow btn btn-primary btn-sm marginTB-xs" id="{{ following.user_id}}" data-toggle="modal">关注</button>
+                                                                                    <button type="button"
+                                                                                            class="follow btn btn-primary btn-sm marginTB-xs"
+                                                                                            id="{{ following.user_id }}"
+                                                                                            data-toggle="modal">关注
+                                                                                    </button>
                                                                                 {% endif %}
-                                                                                <button type="button" class="btn btn-success btn-sm marginTB-xs" onclick="window.location.href='../{{ following.user_id }}/'" data-toggle="modal">查看用户资料</button>
+                                                                                <button type="button"
+                                                                                        class="btn btn-success btn-sm marginTB-xs"
+                                                                                        onclick="window.location.href='../{{ following.user_id }}/'"
+                                                                                        data-toggle="modal">查看用户资料
+                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div><!-- ./user-wrapper -->
@@ -559,12 +603,61 @@
 
                                         </div><!-- ./profile-follower-list -->
                                         <div class="pagination-row clearfix">
-                                            <div class="pull-left vertical-middle hidden-xs">共关注{{ following_total }}人</div>
+                                            <div class="pull-left vertical-middle hidden-xs">共关注{{ following_total }}人
+                                            </div>
                                             <div class="pull-right pull-left-sm">
-                                                <div class="inline-block vertical-middle m-right-xs">共{{ following_pages_total }}页 </div>
-                                                <ul class="pagination vertical-middle" id="page_following" style="margin: 0px">
+                                                <div class="inline-block vertical-middle m-right-xs">
+                                                    共{{ following_pages_total }}页
+                                                </div>
+                                                <ul class="pagination vertical-middle" id="page_following"
+                                                    style="margin: 0px">
                                                 </ul>
                                             </div>
+                                        </div><!-- ./pagination-row -->
+                                    </div><!-- ./tab-pane -->
+                                    <div class="tab-pane fade" id="profileTab5">
+                                        <h4 class="header-text m-top-md">我的收藏</h4>
+                                        <div class="clearfix" style="font-family: 微软雅黑;overflow-y:auto">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width: 5%">
+                                                            <div class="custom-checkbox">
+                                                                <input type="checkbox" id="chkAll" class="inbox-check">
+                                                                <label for="chkAll"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th style="width: 5%">#</th>
+                                                        <th style="width: 40%">题目内容</th>
+                                                        <th style="width: 20%">题型</th>
+                                                        <th style="width: 30%">上传时间</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="word-wrap: break-word;word-break: break-all">
+                                                {% if question_list %}
+                                                    {% for question in question_list %}
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <div class="custom-checkbox"><input type="checkbox" id="Q{{ question.id }}" name="{{ question.id }}" class="inbox-check"><label for="Q{{ question.id }}"></label></div>
+                                                            </td>
+                                                            <td>{{forloop.counter}}</td>
+                                                            <td style="cursor: pointer" onclick="window.location.href='../../question/page1/{{ question.id }}'"><a name="question_content">{{ question.question_content }}</a></td>
+                                                            <td>{{ question.question_name }}</td>
+                                                            <td>{{ question.date|date:"Y-m-d H:i:s" }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="pagination-row clearfix">
+                                            <div class="pull-left vertical-middle hidden-xs">共收藏{{ question_count }}题</div>
+                                            <div class="col-sm-6 pull-right pull-left-sm text-right text-left-sm">
+                                                <a href="javascript:void(0)" onclick="question_collect_delete()" class="btn btn-danger hidden-xs"><i class="fa fa-trash m-right-xs"></i>删除收藏</a>
+                                            </div><!-- ./col -->
+
                                         </div><!-- ./pagination-row -->
                                     </div><!-- ./tab-pane -->
                                 </div><!-- ./tab-content -->
@@ -612,7 +705,7 @@
 
     <script>
 
-        $(function()	{
+        $(function () {
             $('.chart-skill-red').easyPieChart({
                 barColor: '#fc8675',
                 lineWidth: '5'
@@ -634,132 +727,142 @@
             });
         });
 
+        $('#chkAll').click(function()	{
+            if($(this).prop('checked'))	{
+                $('.inbox-check').prop('checked',true);
+                $('.inbox-check').parent().parent().parent().addClass('active');
+            }
+            else	{
+                $('.inbox-check').prop('checked',false);
+                $('.inbox-check').parent().parent().parent().removeClass('active');
+            }
+        });
+
+
         document.getElementById('userinfo').classList.add('active');
-        var str ='{{ about_me }}';
-        var reg = new RegExp("&lt;br&gt;","g");
-        str1=str.replace(reg,"\n");   // textarea换行
-        str2=str.replace(reg,"<br>");  // p标签换行
-        document.getElementById('about_me').value=str1;
+        var str = '{{ about_me }}';
+        var reg = new RegExp("&lt;br&gt;", "g");
+        str1 = str.replace(reg, "\n");   // textarea换行
+        str2 = str.replace(reg, "<br>");  // p标签换行
+        document.getElementById('about_me').value = str1;
         {% if about_me %} $('#about_me_left').html(str2);{% endif %}
+        $("[name='question_content']").each(function () {
+            var obj = $(this).html();
+            var reg = new RegExp("&lt;br&gt;","g");
+            obj = obj.replace(reg," ");
+            $(this).html(obj);
+        });
 
-        $('#infosubmit').on('click',function(){  // ajax提交用户信息
-            $.ajax( {
-                url:'',
+        $('#infosubmit').on('click', function () {  // ajax提交用户信息
+            $.ajax({
+                url: '',
                 type: "POST",
-                dataType:'json',
-                data:$('#info_form').serialize(),
-                progressData:false,
-                success: function(data){
-                    layer.open({title:'成功',content:'提交成功'});
+                dataType: 'json',
+                data: $('#info_form').serialize(),
+                progressData: false,
+                success: function (data) {
+                    layer.open({title: '成功', content: '提交成功'});
 
-                    if(data.name){
-                        $('#name_left').html(data.name);
-                    }else{
-                        $('#name_left').html('未填写');
+                    (data.name) ? $('#name_left').html(data.name) : $('#name_left').html('未填写');
+                    (data.number) ? $('#number_left').html(data.number) : $('#number_left').html('未填写');
+                    (data.address) ? $('#address_left').html(data.address) : $('#address_left').html('未填写');
+                    (data.major) ? $('#major_left').html(data.major) : $('#major_left').html('未填写');
+                    (data.phone) ? $('#phone_left').html(data.phone) : $('#phone_left').html('未填写');
+                    (data.email) ? $('#email_left').html(data.email) : $('#email_left').html('未填写');
+
+                    if (data.about_me){
+                        var str = data.about_me;
+                        var reg = new RegExp("&lt;br&gt;", "g");
+                        str = str.replace(reg, "<br>");
+                        $('#about_me_left').html(str);
+                    } else{
+                        $('#about_me_left').html('未填写');
                     }
-                    if(data.number){
-                        $('#number_left').html(data.number);
-                    }else{
-                        $('#number_left').html('未填写');
+                    if (data.gender === 'man') {
+                        $('#gender_left').removeClass().addClass("fa fa-mars m-left-xs font-30").css("color", "#00c8ff");
                     }
-                    if(data.address){
-                        $('#address_left').html(data.address);
-                    }else{
-                        $('#address_left').html('未填写');
-                    }
-                    if(data.major){
-                        $('#major_left').html(data.major);
-                    }else{
-                        $('#major_left').html('未填写');
-                    }
-                    if(data.phone){
-                        $('#phone_left').html(data.phone);
-                    }else{
-                        $('#phone_left').html('未填写');
-                    }
-                    if(data.email){
-                        $('#email_left').html(data.email);
-                    }else{
-                        $('#email_left').html('未填写');
-                    }
-                    if(data.gender==='man'){
-                        $('#gender_left').removeClass().addClass("fa fa-mars m-left-xs font-30").css("color","#00c8ff");
-                    }
-                    else if(data.gender==='woman'){
-                        $('#gender_left').removeClass().addClass("fa fa-venus m-left-xs font-30").css("color","#fd59b0");
-                    }else{
-                        $('#gender_left').removeClass().addClass("fa fa-venus-mars m-left-xs font-30").css("color","#a40dff");
+                    else if (data.gender === 'woman') {
+                        $('#gender_left').removeClass().addClass("fa fa-venus m-left-xs font-30").css("color", "#fd59b0");
+                    } else {
+                        $('#gender_left').removeClass().addClass("fa fa-venus-mars m-left-xs font-30").css("color", "#a40dff");
+                    }if(data.qq){
+                        $('#qq_link').attr('href',"tencent://message/?uin="+data.qq+"&Site=&Menu=yes")
+                    }if(data.github){
+                        $('#github_link').attr('href','https://github.com/'+data.github)
                     }
 
                 },
-                error: function(){
-                    layer.open({title:'失败',content:'上传失败'});
+                error: function () {
+                    layer.open({title: '失败', content: '上传失败'});
                 }
-         });
+            });
         });
 
-        $('#followed_display').on('click','li div div div div div button[class^=\'follow\']',function () {
-            var obj =$(this);
+        $('#followed_display').on('click', 'li div div div div div button[class^=\'follow\']', function () { // 粉丝列表关注用户
+            var obj = $(this);
+            console.log(obj);
             var id = obj.attr('id');
-            if (obj.html()==='关注中'){
+            if (obj.html() === '关注中') {
 
                 $.ajax({
                     url:{% url 'follow_ajax' %},
-                    type:'GET',
-                    data:{'flag':'cancel','user_id':{{ user_id}},'follow_id':id},
-                    success:function (data) {
-                        if (data.result=='success'){
+                    type: 'GET',
+                    data: {'flag': 'cancel', 'user_id':{{ user_id}}, 'follow_id': id},
+                    success: function (data) {
+                        if (data.result === 'success') {
                             obj.removeClass('btn-default').addClass('btn-primary');
                             obj.html('关注');
-                            layer.msg('成功取消关注',{time:1500});
+                            layer.msg('成功取消关注', {time: 1500});
                         }
                     }
                 })
 
-            }else{
+            } else {
                 $.ajax({
                     url:{% url 'follow_ajax' %},
-                    type:'GET',
-                    data:{'flag':'follow','user_id':{{ user_id}},'follow_id':id},
-                    success:function (data) {
-                        if (data.result==='success'){
+                    type: 'GET',
+                    data: {'flag': 'follow', 'user_id':{{ user_id}}, 'follow_id': id},
+                    success: function (data) {
+                        if (data.result === 'success') {
                             obj.removeClass('btn-primary').addClass('btn-default');
                             obj.html('关注中');
-                            layer.msg('关注成功',{time:1500});
+                            layer.msg('关注成功', {time: 1500});
                         }
                     }
                 })
             }
 
         });
-        $('#following_display').on('click','li div div div div div button[class^=\'follow\']',function () {
-            var obj =$(this);
+        $('#following_display').on('click', 'li div div div div div button[class^=\'follow\']', function () { // 关注列表关注用户
+            var obj = $(this);
+            alert('123');
+            console.log(obj);
             var id = obj.attr('id');
-            if (obj.html()==='关注中'){
+            if (obj.html() === '关注中') {
 
                 $.ajax({
                     url:{% url 'follow_ajax' %},
-                    type:'GET',
-                    data:{'flag':'cancel','user_id':{{ user_id}},'follow_id':id},
-                    success:function (data) {
-                        if (data.result=='success'){
+                    type: 'GET',
+                    data: {'flag': 'cancel', 'user_id':{{ user_id}}, 'follow_id': id},
+                    success: function (data) {
+                        if (data.result == 'success') {
                             obj.removeClass('btn-default').addClass('btn-primary');
                             obj.html('关注');
-                            layer.msg('成功取消关注',{time:1500});
+                            layer.msg('成功取消关注', {time: 1500});
                         }
                     }
                 })
 
-            }else{
+            } else {
                 $.ajax({
                     url:{% url 'follow_ajax' %},
-                    type:'GET',
-                    data:{'flag':'follow','user_id':{{ user_id}},'follow_id':id},
-                    success:function (data) {
-                        if (data.result==='success'){
+                    type: 'GET',
+                    data: {'flag': 'follow', 'user_id':{{ user_id}}, 'follow_id': id},
+                    success: function (data) {
+                        if (data.result === 'success') {
                             obj.removeClass('btn-primary').addClass('btn-default');
                             obj.html('关注中');
-                            layer.msg('关注成功',{time:1500});
+                            layer.msg('关注成功', {time: 1500});
                         }
                     }
                 })
@@ -768,251 +871,364 @@
         });
 
 
-        var local_page = 1,local_page_following =1;
-        function page_number_followed(){ // 粉丝窗口生成上下页跳转
+        var local_page = 1, local_page_following = 1;
+
+        function page_number_followed() { // 粉丝窗口生成上下页跳转
             var $page = $('#page_followed');
             $page.empty().append("<li name=\"1\" class=\"page_followed\"><a href=\"javascript:void(0)\"><i class=\"fa fa-step-backward\"></i></a></li>");
-            if(local_page === {{ followed_pages_total }}){
-                if(local_page-4>0){
-                    $page.append("<li name="+(local_page-4)+"class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page-4)+"</a></li>")
+            if (local_page === {{ followed_pages_total }}) {
+                if (local_page - 4 > 0) {
+                    $page.append("<li name=" + (local_page - 4) + "class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page - 4) + "</a></li>")
                 }
-                if(local_page-3>0){
-                    $page.append("<li name="+(local_page-3)+"class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page-3)+"</a></li>")
+                if (local_page - 3 > 0) {
+                    $page.append("<li name=" + (local_page - 3) + "class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page - 3) + "</a></li>")
                 }
-            }if(local_page+1 ==={{ followed_pages_total }}){
-                if(local_page-3>0) {
-                    $page.append("<li name="+(local_page-3)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page-3)+"</a></li>")
-                }
-            }if(local_page-2>0){
-                    $page.append("<li name="+(local_page-2)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page-2)+"</a></li>")
-            }if(local_page-1>0){
-                    $page.append("<li name="+(local_page-1)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page-1)+"</a></li>")
             }
-            $page.append("<li name="+(local_page)+" class=\"page_followed active\"><a href=\"javascript:void(0)\" style=\"color:white\">"+local_page+"</a></li>");
-            if(local_page+1<={{ followed_pages_total }}){
-                $page.append("<li name="+(local_page+1)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page+1)+"</a></li>")
-            }if(local_page+2<={{ followed_pages_total }}){
-                $page.append("<li name="+(local_page+2)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page+2)+"</a></li>")
-            }if(local_page===1){
-                if(local_page+3<={{ followed_pages_total }}){
-                    $page.append("<li name="+(local_page+3)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page+3)+"</a></li>")
-                }if(local_page+4<={{ followed_pages_total }}){
-                    $page.append("<li name="+(local_page+4)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page+4)+"</a></li>")
+            if (local_page + 1 ==={{ followed_pages_total }}) {
+                if (local_page - 3 > 0) {
+                    $page.append("<li name=" + (local_page - 3) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page - 3) + "</a></li>")
                 }
-            }if(local_page===2){
-                if(local_page+3<={{ followed_pages_total }}){
-                $page.append("<li name="+(local_page+3)+" class=\"page_followed\"><a href=\"javascript:void(0)\">"+(local_page+3)+"</a></li>")
+            }
+            if (local_page - 2 > 0) {
+                $page.append("<li name=" + (local_page - 2) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page - 2) + "</a></li>")
+            }
+            if (local_page - 1 > 0) {
+                $page.append("<li name=" + (local_page - 1) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page - 1) + "</a></li>")
+            }
+            $page.append("<li name=" + (local_page) + " class=\"page_followed active\"><a href=\"javascript:void(0)\" style=\"color:white\">" + local_page + "</a></li>");
+            if (local_page + 1 <={{ followed_pages_total }}) {
+                $page.append("<li name=" + (local_page + 1) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page + 1) + "</a></li>")
+            }
+            if (local_page + 2 <={{ followed_pages_total }}) {
+                $page.append("<li name=" + (local_page + 2) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page + 2) + "</a></li>")
+            }
+            if (local_page === 1) {
+                if (local_page + 3 <={{ followed_pages_total }}) {
+                    $page.append("<li name=" + (local_page + 3) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page + 3) + "</a></li>")
+                }
+                if (local_page + 4 <={{ followed_pages_total }}) {
+                    $page.append("<li name=" + (local_page + 4) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page + 4) + "</a></li>")
+                }
+            }
+            if (local_page === 2) {
+                if (local_page + 3 <={{ followed_pages_total }}) {
+                    $page.append("<li name=" + (local_page + 3) + " class=\"page_followed\"><a href=\"javascript:void(0)\">" + (local_page + 3) + "</a></li>")
                 }
             }
             $page.append("<li name=\"{{ followed_pages_total }}\" class=\"page_followed\"><a href=\"javascript:void(0)\"><i class=\"fa fa-step-forward\"></i></a></li>")
 
         }
-        function page_number_following(){ // 关注窗口生成上下页跳转
+
+        function page_number_following() { // 关注窗口生成上下页跳转
             var $page = $('#page_following');
             $page.empty().append("<li name=\"1\" class=\"page_following\"><a href=\"javascript:void(0)\"><i class=\"fa fa-step-backward\"></i></a></li>");
-            if(local_page_following === {{ following_pages_total }}){
-                if(local_page_following-4>0){
-                    $page.append("<li name="+(local_page_following-4)+"class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following-4)+"</a></li>")
+            if (local_page_following === {{ following_pages_total }}) {
+                if (local_page_following - 4 > 0) {
+                    $page.append("<li name=" + (local_page_following - 4) + "class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following - 4) + "</a></li>")
                 }
-                if(local_page_following-3>0){
-                    $page.append("<li name="+(local_page_following-3)+"class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following-3)+"</a></li>")
+                if (local_page_following - 3 > 0) {
+                    $page.append("<li name=" + (local_page_following - 3) + "class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following - 3) + "</a></li>")
                 }
-            }if(local_page_following+1 ==={{ following_pages_total }}){
-                if(local_page_following-3>0) {
-                    $page.append("<li name="+(local_page_following-3)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following-3)+"</a></li>")
-                }
-            }if(local_page_following-2>0){
-                    $page.append("<li name="+(local_page_following-2)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following-2)+"</a></li>")
-            }if(local_page_following-1>0){
-                    $page.append("<li name="+(local_page_following-1)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following-1)+"</a></li>")
             }
-            $page.append("<li name="+(local_page_following)+" class=\"page_following active\"><a href=\"javascript:void(0)\" style=\"color:white\">"+local_page_following+"</a></li>");
-            if(local_page_following+1<={{ following_pages_total }}){
-                $page.append("<li name="+(local_page_following+1)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following+1)+"</a></li>")
-            }if(local_page_following+2<={{ following_pages_total }}){
-                $page.append("<li name="+(local_page_following+2)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following+2)+"</a></li>")
-            }if(local_page_following===1){
-                if(local_page_following+3<={{ following_pages_total }}){
-                    $page.append("<li name="+(local_page_following+3)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following+3)+"</a></li>")
-                }if(local_page_following+4<={{ following_pages_total }}){
-                    $page.append("<li name="+(local_page_following+4)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following+4)+"</a></li>")
+            if (local_page_following + 1 ==={{ following_pages_total }}) {
+                if (local_page_following - 3 > 0) {
+                    $page.append("<li name=" + (local_page_following - 3) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following - 3) + "</a></li>")
                 }
-            }if(local_page_following===2){
-                if(local_page_following+3<={{ following_pages_total }}){
-                $page.append("<li name="+(local_page_following+3)+" class=\"page_following\"><a href=\"javascript:void(0)\">"+(local_page_following+3)+"</a></li>")
+            }
+            if (local_page_following - 2 > 0) {
+                $page.append("<li name=" + (local_page_following - 2) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following - 2) + "</a></li>")
+            }
+            if (local_page_following - 1 > 0) {
+                $page.append("<li name=" + (local_page_following - 1) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following - 1) + "</a></li>")
+            }
+            $page.append("<li name=" + (local_page_following) + " class=\"page_following active\"><a href=\"javascript:void(0)\" style=\"color:white\">" + local_page_following + "</a></li>");
+            if (local_page_following + 1 <={{ following_pages_total }}) {
+                $page.append("<li name=" + (local_page_following + 1) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following + 1) + "</a></li>")
+            }
+            if (local_page_following + 2 <={{ following_pages_total }}) {
+                $page.append("<li name=" + (local_page_following + 2) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following + 2) + "</a></li>")
+            }
+            if (local_page_following === 1) {
+                if (local_page_following + 3 <={{ following_pages_total }}) {
+                    $page.append("<li name=" + (local_page_following + 3) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following + 3) + "</a></li>")
+                }
+                if (local_page_following + 4 <={{ following_pages_total }}) {
+                    $page.append("<li name=" + (local_page_following + 4) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following + 4) + "</a></li>")
+                }
+            }
+            if (local_page_following === 2) {
+                if (local_page_following + 3 <={{ following_pages_total }}) {
+                    $page.append("<li name=" + (local_page_following + 3) + " class=\"page_following\"><a href=\"javascript:void(0)\">" + (local_page_following + 3) + "</a></li>")
                 }
             }
             $page.append("<li name=\"{{ following_pages_total }}\" class=\"page_following\"><a href=\"javascript:void(0)\"><i class=\"fa fa-step-forward\"></i></a></li>")
 
         }
+
         page_number_followed();
         page_number_following();
 
-        $('#page_followed').on('click', 'li',function () {
-            var obj_followed=$(this);
+        $('#page_followed').on('click', 'li', function () {  // 生成粉丝列表
+            var obj_followed = $(this);
             var page = parseInt(obj_followed.attr('name'));
             local_page = page;
             page_number_followed();
 
             $.ajax({
                 url:{% url 'get_friend' %},
-                type:'GET',
-                data:{'flag':'followed','user_id':{{ page_user_id }},'user_name':'{{ username }}','page':local_page}, //user_id为被访问资料页面的用户的id   user_name是当前登录用户name
-                success:function (data) {
+                type: 'GET',
+                data: {
+                    'flag': 'followed',
+                    'user_id':{{ page_user_id }},
+                    'user_name': '{{ username }}',
+                    'page': local_page
+                }, //user_id为被访问资料页面的用户的id   user_name是当前登录用户name
+                success: function (data) {
 
-                    if(data.result==='success'){
+                    if (data.result === 'success') {
                         var obj = $('#followed_display');
                         obj.empty();
                         var followed_list = data.followed_list;
                         var flag_list = data.flag_list;
 
-                        for(var i in followed_list){
-                            var name,major,id;   //
+                        for (var i in followed_list) {
+                            var name, major, id;   //
 
-                            if(followed_list[i].name===undefined){
-                                name = ""}
-                            else{name = followed_list[i].name}
-                            if(followed_list[i].major===undefined){
-                                major = ""}
-                            else{major = followed_list[i].major}
-                            id =followed_list[i].user;
-
-
-                            if (flag_list[i]['relation'] =="follow"){
-                            obj.append("<li style=\"width: 33.3%\">\n" +
-                                "           <div class=\"panel panel-default clearfix\">\n" +
-                                "               <div class=\"panel-body\">\n" +
-                                "                   <div class=\"user-wrapper\">\n" +
-                                "                       <div class=\"user-avatar\">\n" +
-                                "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
-                                "                       </div>\n"+
-                                "                       <div class=\"user-detail small-img\">\n" +
-                                            "               <div class=\"font-16\">"+flag_list[i]['username']+"</div>\n" +
-                                            "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">"+name+"</small>\n" +
-                                            "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">"+major+"</small>\n" +
-                                            "               <div class=\"m-top-sm\">"+
-                                            "                   <button type=\"button\" class=\"follow btn btn-default btn-sm marginTB-xs\" id=\""+id+"\" data-toggle=\"modal\">关注中</button>\n"+
-                                            "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../"+id+"/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
-                                            "               </div>\n" +
-                                "                        </div>\n" +
-                                            "        </div><!-- ./user-wrapper -->\n" +
-                                "               </div>\n" +
-                                "           </div>\n" +
-                                "        </li>"
-                                )
-                            }else{
-                                obj.append("<li style=\"width: 33.3%\">\n" +
-                                "           <div class=\"panel panel-default clearfix\">\n" +
-                                "               <div class=\"panel-body\">\n" +
-                                "                   <div class=\"user-wrapper\">\n" +
-                                "                       <div class=\"user-avatar\">\n" +
-                                "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
-                                "                       </div>\n"+
-                                "                       <div class=\"user-detail small-img\">\n" +
-                                            "               <div class=\"font-16\">"+flag_list[i]['username']+"</div>\n" +
-                                            "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">"+name+"</small>\n" +
-                                            "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">"+major+"</small>\n" +
-                                            "               <div class=\"m-top-sm\">"+
-                                            "                   <button type=\"button\" class=\"follow btn btn-primary btn-sm marginTB-xs\" id=\""+id+"\" data-toggle=\"modal\">关注</button>\n"+
-                                            "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../"+id+"/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
-                                            "               </div>\n" +
-                                "                        </div>\n" +
-                                            "        </div><!-- ./user-wrapper -->\n" +
-                                "               </div>\n" +
-                                "           </div>\n" +
-                                "        </li>")
+                            if (followed_list[i].name === undefined) {
+                                name = ""
                             }
+                            else {
+                                name = followed_list[i].name
+                            }
+                            if (followed_list[i].major === undefined) {
+                                major = ""
+                            }
+                            else {
+                                major = followed_list[i].major
+                            }
+                            id = followed_list[i].user;
+
+                            if (flag_list[i]['relation'] == "follow") {
+                                obj.append("<li style=\"width: 33.3%\">\n" +
+                                    "           <div class=\"panel panel-default clearfix\">\n" +
+                                    "               <div class=\"panel-body\">\n" +
+                                    "                   <div class=\"user-wrapper\">\n" +
+                                    "                       <div class=\"user-avatar\">\n" +
+                                    "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
+                                    "                       </div>\n" +
+                                    "                       <div class=\"user-detail small-img\">\n" +
+                                    "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + major + "</small>\n" +
+                                    "               <div class=\"m-top-sm\">" +
+                                    "                   <button type=\"button\" class=\"follow btn btn-default btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注中</button>\n" +
+                                    "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
+                                    "               </div>\n" +
+                                    "                        </div>\n" +
+                                    "        </div><!-- ./user-wrapper -->\n" +
+                                    "               </div>\n" +
+                                    "           </div>\n" +
+                                    "        </li>"
+                                )
+                            } else {
+                                obj.append("<li style=\"width: 33.3%\">\n" +
+                                    "           <div class=\"panel panel-default clearfix\">\n" +
+                                    "               <div class=\"panel-body\">\n" +
+                                    "                   <div class=\"user-wrapper\">\n" +
+                                    "                       <div class=\"user-avatar\">\n" +
+                                    "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
+                                    "                       </div>\n" +
+                                    "                       <div class=\"user-detail small-img\">\n" +
+                                    "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + major + "</small>\n" +
+                                    "               <div class=\"m-top-sm\">" +
+                                    "                   <button type=\"button\" class=\"follow btn btn-primary btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注</button>\n" +
+                                    "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
+                                    "               </div>\n" +
+                                    "                        </div>\n" +
+                                    "        </div><!-- ./user-wrapper -->\n" +
+                                    "               </div>\n" +
+                                    "           </div>\n" +
+                                    "        </li>")
                             }
                         }
+                    }
                 },
-                error:function () {
+                error: function () {
                     alert('获取失败！');
                 }
             })
         });
 
-        $('#page_following').on('click', 'li',function () {
-            var obj_following=$(this);
+        $('#page_following').on('click', 'li', function () {  // 生成关注列表
+            var obj_following = $(this);
             var page = parseInt(obj_following.attr('name'));
             local_page_following = page;
             page_number_following();
 
             $.ajax({
                 url:{% url 'get_friend' %},
-                type:'GET',
-                data:{'flag':'following','user_id':{{ page_user_id }},'user_name':'{{ username }}','page':local_page_following}, //user_id为被访问资料页面的用户的id   user_name是当前登录用户name
-                success:function (data) {
+                type: 'GET',
+                data: {
+                    'flag': 'following',
+                    'user_id':{{ page_user_id }},
+                    'user_name': '{{ username }}',
+                    'page': local_page_following
+                }, //user_id为被访问资料页面的用户的id   user_name是当前登录用户name
+                success: function (data) {
 
-                    if(data.result==='success'){
+                    if (data.result === 'success') {
                         var obj = $('#following_display');
                         obj.empty();
                         var following_list = data.following_list;
                         var flag_list = data.flag_list;
 
-                        for(var i in following_list){
-                            var name,major,id;   //
+                        for (var i in following_list) {
+                            var name, major, id;   //
 
-                            if(following_list[i].name===undefined){
-                                name = ""}
-                            else{name = following_list[i].name}
-                            if(following_list[i].major===undefined){
-                                major = ""}
-                            else{major = following_list[i].major}
-                            id =following_list[i].user;
-
-
-                            if (flag_list[i]['relation'] =="follow"){
-                            obj.append("<li style=\"width: 33.3%\">\n" +
-                                "           <div class=\"panel panel-default clearfix\">\n" +
-                                "               <div class=\"panel-body\">\n" +
-                                "                   <div class=\"user-wrapper\">\n" +
-                                "                       <div class=\"user-avatar\">\n" +
-                                "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
-                                "                       </div>\n"+
-                                "                       <div class=\"user-detail small-img\">\n" +
-                                            "               <div class=\"font-16\">"+flag_list[i]['username']+"</div>\n" +
-                                            "               <small class=\"block text-muted font-12\">"+name+"</small>\n" +
-                                            "               <small class=\"block text-muted font-12\">"+major+"</small>\n" +
-                                            "               <div class=\"m-top-sm\">"+
-                                            "                   <button type=\"button\" class=\"follow btn btn-default btn-sm marginTB-xs\" id=\""+id+"\" data-toggle=\"modal\">关注中</button>\n"+
-                                            "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../"+id+"/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
-                                            "               </div>\n" +
-                                "                        </div>\n" +
-                                            "        </div><!-- ./user-wrapper -->\n" +
-                                "               </div>\n" +
-                                "           </div>\n" +
-                                "        </li>"
-                                )
-                            }else{
-                                obj.append("<li style=\"width: 33.3%\">\n" +
-                                "           <div class=\"panel panel-default clearfix\">\n" +
-                                "               <div class=\"panel-body\">\n" +
-                                "                   <div class=\"user-wrapper\">\n" +
-                                "                       <div class=\"user-avatar\">\n" +
-                                "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
-                                "                       </div>\n"+
-                                "                       <div class=\"user-detail small-img\">\n" +
-                                            "               <div class=\"font-16\">"+flag_list[i]['username']+"</div>\n" +
-                                            "               <small class=\"block text-muted font-12\">"+name+"</small>\n" +
-                                            "               <small class=\"block text-muted font-12\">"+major+"</small>\n" +
-                                            "               <div class=\"m-top-sm\">"+
-                                            "                   <button type=\"button\" class=\"follow btn btn-primary btn-sm marginTB-xs\" id=\""+id+"\" data-toggle=\"modal\">关注</button>\n"+
-                                            "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../"+id+"/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
-                                            "               </div>\n" +
-                                "                        </div>\n" +
-                                            "        </div><!-- ./user-wrapper -->\n" +
-                                "               </div>\n" +
-                                "           </div>\n" +
-                                "        </li>")
+                            if (following_list[i].name === undefined) {
+                                name = ""
                             }
+                            else {
+                                name = following_list[i].name
+                            }
+                            if (following_list[i].major === undefined) {
+                                major = ""
+                            }
+                            else {
+                                major = following_list[i].major
+                            }
+                            id = following_list[i].user;
+
+
+                            if (flag_list[i]['relation'] == "follow") {
+                                obj.append("<li style=\"width: 33.3%\">\n" +
+                                    "           <div class=\"panel panel-default clearfix\">\n" +
+                                    "               <div class=\"panel-body\">\n" +
+                                    "                   <div class=\"user-wrapper\">\n" +
+                                    "                       <div class=\"user-avatar\">\n" +
+                                    "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
+                                    "                       </div>\n" +
+                                    "                       <div class=\"user-detail small-img\">\n" +
+                                    "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
+                                    "               <small class=\"block text-muted font-12\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\">" + major + "</small>\n" +
+                                    "               <div class=\"m-top-sm\">" +
+                                    "                   <button type=\"button\" class=\"follow btn btn-default btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注中</button>\n" +
+                                    "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
+                                    "               </div>\n" +
+                                    "                        </div>\n" +
+                                    "        </div><!-- ./user-wrapper -->\n" +
+                                    "               </div>\n" +
+                                    "           </div>\n" +
+                                    "        </li>"
+                                )
+                            } else {
+                                obj.append("<li style=\"width: 33.3%\">\n" +
+                                    "           <div class=\"panel panel-default clearfix\">\n" +
+                                    "               <div class=\"panel-body\">\n" +
+                                    "                   <div class=\"user-wrapper\">\n" +
+                                    "                       <div class=\"user-avatar\">\n" +
+                                    "                           <img class=\"small-img img-circle img-thumbnail\" src=\"images/profile/profile2.jpg\" alt=\"\">\n" +
+                                    "                       </div>\n" +
+                                    "                       <div class=\"user-detail small-img\">\n" +
+                                    "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
+                                    "               <small class=\"block text-muted font-12\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\">" + major + "</small>\n" +
+                                    "               <div class=\"m-top-sm\">" +
+                                    "                   <button type=\"button\" class=\"follow btn btn-primary btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注</button>\n" +
+                                    "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
+                                    "               </div>\n" +
+                                    "                        </div>\n" +
+                                    "        </div><!-- ./user-wrapper -->\n" +
+                                    "               </div>\n" +
+                                    "           </div>\n" +
+                                    "        </li>")
                             }
                         }
+                    }
                 },
-                error:function () {
+                error: function () {
                     alert('获取失败！');
                 }
             })
-        })
+        });
+
+        function change_password() {  // 修改密码
+            var index = layer.open({
+                title: '修改密码',
+                type: 1,
+                area: ['500px', '250px'],
+                content: '<div  style="margin-top:5px"> <label class="col-sm-2 control-label" style="font-size:15px;text-align:center;line-height:29px">原密码</label> \n'
+                        +' <div class="col-sm-9"> <input type="password" class="form-control" id="pw_old"> </div> </div> \n'
+                        +'<div> <label class="col-sm-2 control-label" style="font-size:15px;text-align:center;line-height:29px;margin-top:5px">新密码</label> \n'
+                        +' <div class="col-sm-9"> <input type="password" class="form-control" id="pw_new" style="margin-top:5px"> </div> </div> \n'
+                        +'<div> <label class="col-sm-2 control-label" style="font-size:15px;text-align:center;line-height:29px;padding-right:0px;margin-top:5px">确认密码</label> \n'
+                        +' <div class="col-sm-9"> <input type="password" class="form-control" id="pw_check" style="margin-top:5px"> </div> </div> \n'
+                        +'<div class="form-group m-top-lg">\n'
+                        +'    <label class="col-sm-3 control-label"></label>\n'
+                        +'    <div class="col-sm-9" style="margin-top:10px">\n'
+                        +'        <a class="btn btn-info" id="pwsubmit">修改密码</a>\n'
+                        +'    </div>\n'
+                        +'</div>'
+            });
+
+            $('#pwsubmit').on('click',function () {
+                var pw_old = $('#pw_old').val(), pw_new = $('#pw_new').val(), pw_check = $('#pw_check').val();
+                if(pw_new===""||pw_old===""||pw_check===""){
+                    layer.open({title:'错误',content:'密码输入不能为空！'})
+                }else if (pw_new!==pw_check){
+                    layer.open({title:'错误',content:'两次密码输入不一致！'
+                    })
+                }else{
+                    $.ajax({
+                        url:'{% url 'change_password' %}',
+                        type:'POST',
+                        data:{'pw_old':pw_old,'pw_new':pw_new,'user_id':{{ user_id }}},
+                        success:function (data) {
+                            if(data.result==='success'){
+                                layer.open({title:'成功',content:'密码修改成功！'});
+                                layer.close(index)
+                            }else{
+                                layer.open({title:'修改失败',content:data.result})
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function question_collect_delete() {
+            var obj = document.getElementsByClassName('inbox-check'), check_val = [];
+
+            for (var i in obj){
+                if(i===0){ // 跳过checkall 计算后面的checkbox
+                    continue
+                }
+                if(obj[i].checked){
+                    check_val.push(parseInt(obj[i].name))
+                }
+            }
+
+            if (check_val.length===0){
+                layer.open({title:'删除失败',content:'请点击问题前的方框选中问题。'})
+            }else{
+                layer.open({title:'注意！',content:'确定要从收藏中删除吗？',yes:function () {
+                    $.ajax({
+                        url:{% url 'question_collect' %},
+                        type: "GET",
+                        dataType:'json',
+                        data:{'id':check_val, 'user_id':{{ user_id }},'flag':'delete'},
+                        traditional:true,
+                        success:function () {
+                            layer.open({title:'成功',content:'删除成功',yes:function(){location.reload()},cancel:function(){location.reload()}});
+                        }
+                    })
+            }})
+            }
+        }
+
 
     </script>
 {% endblock %}

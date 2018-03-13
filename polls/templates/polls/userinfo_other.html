@@ -130,9 +130,10 @@
 
                             <h4 class="m-top-md m-bottom-sm">社交网络</h4>
 
-                            <a class="social-link rss-hover"><i class="fa fa-qq"></i></a>
-                            <a class="social-link twitter-hover"><i class="fa fa-twitter"></i></a>
-                            <a class="social-link pinterest-hover"><i class="fa fa-pinterest"></i></a>
+                            {% if qq %}<a class="social-link rss-hover" id="qq_link" href="tencent://message/?uin={{ qq }}&Site=&Menu=yes"><i class="fa fa-qq"></i></a>
+                            {% else %}<a class="social-link" id="qq_link" ><i class="fa fa-qq"></i></a>{% endif %}
+                            {% if github %}<a class="social-link pinterest-hover" id="github_link" href='https://github.com/{{ github }}' target="_blank"><i class="fa fa-github"></i></a>
+                            {% else %}<a class="social-link" id="github_link" ><i class="fa fa-github"></i></a>{% endif %}
 
                         </div>
                     </div><!-- ./row -->
@@ -201,79 +202,46 @@
 
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <h4 class="m-top-md">Recent Activity</h4>
+                                                <h4 class="m-top-md">近期动态</h4>
 
-                                                <div class="recent-activity-list">
+                                                <div class="recent-activity-list" style="font-family: 微软雅黑;font-size: 15px">
                                                     <ul>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="/static/images/profile/profile3.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Karen Martin</span> started following <span class="font-semi-bold">Jame Smith</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile3.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Karen Martin</span> just added <span class="font-semi-bold">Simplify Admin</span> to dashboard.
-                                                                <small class="text-muted block">3 hrs ago </small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile5.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Sarah Garcia</span> added new photo
-                                                                <small class="text-muted block">Yesterday</small>
+                                                        {% if action_list %}
+                                                            {% for action in action_list %}
+                                                                <li>
+                                                                    <div class="activity-detail">
+                                                                        <span class="font-semi-bold">{% if name %}{{ name }}
+                                                                            {% else %}{{ page_user_name }}{% endif %}
+                                                                        </span> {% if action.action == 'follow'%}关注了 <a href="../{{ action.object_id }}"><span  class="font-semi-bold">{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'comment'%}评价了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold" >{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'collect'%}收藏了 <span class="font-semi-bold">{{ action.object_id }}个问题</span>
+                                                                                {% elif action.action == 'revise'%}修改了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold" >{{ action.object_content }}</span></a>
+                                                                                {% elif action.action == 'submit'%}回答了 <a href="../../question/page1/{{ action.object_id }}"><span class="font-semi-bold">{{ action.object_content }}</span></a>
+                                                                        {% endif %}
+                                                                        <small class="text-muted block" id="action{{ action.id }}"></small>
+                                                                        <script> // 利用时间戳计算操作距今时间
+                                                                            var offset = parseInt(Date.now()/1000)-{{ action.time }}
+                                                                            if(offset<60){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=offset+'秒前'
+                                                                            }else if(offset<3600){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/60)+'分钟前'
+                                                                            }else if(offset<86400){
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/3600)+'小时前'
+                                                                            }else{
+                                                                                document.getElementById('action{{ action.id }}').innerHTML=parseInt(offset/86400)+'天前'
+                                                                            }
+                                                                        </script>
 
-                                                                <div class="m-top-sm">
-                                                                    <img src="images/img11.jpg" alt="">
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile4.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Jame Smith</span> started following <span class="font-semi-bold">Karen Martin</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile6.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Chistopher Brown</span> just purchased <span class="font-semi-bold">your item</span>.
-                                                                <small class="text-muted block">36 mins ago</small>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="activity-user-profile">
-                                                                <img src="images/profile/profile7.jpg" alt="">
-                                                            </div>
-                                                            <div class="activity-detail">
-                                                                <span class="font-semi-bold">Elizabeth Carter</span> uploaded <a class="font-semi-bold">3 photos</a>.
-                                                                <small class="text-muted block">36 mins ago</small>
+                                                                    </div>
+                                                                </li>
+                                                            {% endfor %}
+                                                        {% endif %}
 
-                                                                <ul class="uploaded-photo-list m-top-sm clearfix">
-                                                                    <li><a href="#"><img src="images/gallery/gallery4.jpg" alt=""></a></li>
-                                                                    <li><a href="#"><img src="images/gallery/gallery5.jpg" alt=""></a></li>
-                                                                    <li><a href="#"><img src="images/gallery/gallery6.jpg" alt=""></a></li>
-                                                                </ul><!-- ./upload-photo-list -->
-                                                            </div>
-                                                        </li>
                                                     </ul>
                                                 </div><!-- ./.recent-activity-list -->
                                             </div><!-- ./col -->
                                             <div class="col-lg-6">
-                                                <h4 class="m-top-md">User Statistic</h4>
+                                                <h4 class="m-top-md">用户数据</h4>
 
                                                 <div class="row m-top-md">
                                                     <div class="col-sm-6" style="cursor: pointer" onclick="$('#table4').click()">
@@ -290,8 +258,8 @@
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-twitter fa-3x"></i>
                                                             </div>
-                                                            <small class="text-upper">Follower</small>
-                                                            <h3 class="no-margin">981</h3>
+                                                            <small class="text-upper">回答</small>
+                                                            <h3 class="no-margin">{{ answer_total }}</h3>
                                                         </div>
                                                     </div><!-- ./col -->
                                                 </div>
@@ -311,36 +279,12 @@
                                                             <div class="widget-stat-icon">
                                                                 <i class="fa fa-eye fa-3x"></i>
                                                             </div>
-                                                            <small class="text-upper">Visit</small>
-                                                            <h3 class="no-margin">2176</h3>
+                                                            <small class="text-upper">访客</small>
+                                                            <h3 class="no-margin">{{ visit }}</h3>
                                                         </div>
                                                     </div><!-- ./col -->
                                                 </div><!-- ./row -->
 
-                                                <div class="panel panel-default m-top-md">
-                                                    <div class="panel-heading">
-                                                        <i class="fa fa-twitter"></i> Latest Tweets
-                                                    </div>
-                                                    <ul class="list-group">
-                                                        <li class="list-group-item">
-                                                            <p>Welcome <a href="#" class="text-info">@John Doe</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 6 minutes ago
-                                                            </small>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="#" class="text-info">@Jand Doe</a></p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 41 minutes ago
-                                                            </small>
-                                                        </li>
-                                                        <li class="list-group-item"> <p><a href="#" class="text-info">@Bill Doe</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eros nibh, viverra a dui a, gravida varius velit.</p>
-                                                            <small class="block text-muted">
-                                                                <i class="fa fa-clock-o"></i> 1 hour ago
-                                                            </small>
-                                                        </li>
-                                                    </ul><!-- /list-group -->
-                                                </div><!-- ./panel -->
                                             </div><!-- ./col -->
                                         </div><!-- ./row -->
                                     </div><!-- ./tab-pane -->
@@ -431,6 +375,27 @@
                                                 <label class="col-sm-3 control-label">描述一下自己</label>
                                                 <div class="col-sm-3" style="font-size: 15px;padding-top: 5px" id="about_me">
                                                     {% if not about_me %}
+                                                        未填写
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <h4 class="header-text m-top-md">社交账户</h4>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">QQ</label>
+                                                <div class="col-sm-3" style="font-size: 15px;padding-top: 5px">
+                                                    {% if qq %}
+                                                        {{ qq }}
+                                                    {% else %}
+                                                        未填写
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Github</label>
+                                                <div class="col-sm-3" style="font-size: 15px;padding-top: 5px">
+                                                    {% if github %}
+                                                        {{ github }}
+                                                    {% else %}
                                                         未填写
                                                     {% endif %}
                                                 </div>

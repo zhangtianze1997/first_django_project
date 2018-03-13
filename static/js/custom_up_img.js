@@ -77,17 +77,15 @@ $(function() {
                 url:url,
                 type: "POST",
                 data: formdata,
-                progressData:false,
+                processData:false,
                 contentType: false,
 
-                success: function(data, textStatus){
+                success: function(data){
 
                 	$modal.modal('close');
                 	set_alert_info("成功了");
                 	$modal_alert.modal();
-                	alert(data.result);
-                	alert(textStatus);
-                    document.getElementById('userimg').setAttribute('src',imgdata);
+                    // document.getElementById('userimg').setAttribute('src',imgdata);
 
                 },
                 error: function(){

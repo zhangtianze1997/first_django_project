@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django import forms
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, hashers
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 import re
+import time
 
 from .models import *
 
@@ -44,7 +45,7 @@ def jump_question(req):
 
 @login_required()
 def question(req, page):
-    if req.is_ajax() and req.method == 'GET':
+    if req.is_ajax() and req.method == 'GET':  # 删除问题ajax
         question_id_list = req.GET.getlist('id')
         for question_id in question_id_list:
             Question.objects.get(id=question_id).delete()
@@ -113,6 +114,8 @@ def question_new(req):
 
 @login_required()
 def question_detail(req, question_id, page):
+    user_id = User.objects.get(username=req.session['user']).id
+
     if req.session['user'] == 'admin':
 
         if req.is_ajax() and req.method == 'POST':
@@ -122,11 +125,25 @@ def question_detail(req, question_id, page):
             question.question_name = question_name
             question.question_content = question_content
             question.save()
+            answer_list = Answer.objects.filter(question_id=question_id)
+            for answer in answer_list:
+                AnswerDraft.objects.create(question_id=question_id, user_id=answer.user_id,
+                                           answer_text=answer.answer_text)
+            answer_list.delete()
+            question_content = re.sub('<br>', ' ', question_content)
+            if len(question_content) > 20:
+                question_content = question_content[0:20] + '...'
+            ActionLog(user_id=1, action='revise', object_id=question_id, object_content=question_content,
+                      time=int(time.time())).save()
             return JsonResponse({'result': 'success'})
+        elif req.is_ajax() and req.method == 'GET':
+            question = Question.objects.get(id=question_id)
+            return JsonResponse({'result': 'success', 'question_name': question.question_name,
+                                 'question_content': question.question_content})
 
         question = get_object_or_404(Question, pk=question_id)
         try:
-            answer_list = Answer.objects.filter(question_id=question_id)
+            answer_list = Answer.objects.filter(question_id=question_id).order_by("comment", "date")
             answer_list_final = []
 
             for obj in answer_list:
@@ -141,26 +158,27 @@ def question_detail(req, question_id, page):
                     pass
                 answer_list_final.append(obj)
             context = {'question': question, 'username': req.session['user'],
-                       'user_id': User.objects.get(username=req.session['user']).id,
+                       'user_id': user_id,
                        'answer_list': answer_list_final}
             return render(req, 'polls/detail_admin.html', context)
 
         except ObjectDoesNotExist:
 
             context = {'question': question, 'username': req.session['user'],
-                       'user_id': User.objects.get(username=req.session['user']).id,
+                       'user_id': user_id,
                        }
             return render(req, 'polls/detail_admin.html', context)
 
-    else:
+    else:  # 用户页面
         try:  # 如果用户已经回答该问题
             obj_answer = Answer.objects.get(question_id=question_id,
-                                            user_id=User.objects.get(username=req.session['user']).id)
+                                            user_id=user_id)
             question = get_object_or_404(Question, pk=question_id)
             context = {'question': question, 'username': req.session['user'],
-                       'user_id': User.objects.get(username=req.session['user']).id,
+                       'user_id': user_id,
                        'answer': obj_answer.answer_text, 'comment': obj_answer.comment, 'check': '已提交'}
             return render(req, 'polls/detail.html', context)
+
         except ObjectDoesNotExist:
 
             if req.method == "POST":
@@ -173,41 +191,46 @@ def question_detail(req, question_id, page):
                                                                               defaults={'answer_text': answer})
                     question = get_object_or_404(Question, pk=question_id)
                     context = {'question': question, 'username': req.session['user'],
-                               'user_id': User.objects.get(username=req.session['user']).id,
+                               'user_id': user_id,
                                'draft': obj_draft.answer_text, 'info_save': '草稿保存成功！'}
                     return render(req, 'polls/detail.html', context)
                 else:
                     try:
                         Answer.objects.get(question_id=question_id,
-                                           user_id=User.objects.get(username=req.session['user']).id)
+                                           user_id=user_id)
                         return HttpResponseRedirect('../' + question_id + '/')
                     except ObjectDoesNotExist:
                         Answer.objects.create(question_id=question_id,
-                                              user_id=User.objects.get(username=req.session['user']).id,
+                                              user_id=user_id,
                                               date=timezone.now(), answer_text=answer)
                     try:  # 删除数据库中草稿
                         AnswerDraft.objects.get(question_id=question_id,
-                                                user_id=User.objects.get(username=req.session['user']).id).delete()
+                                                user_id=user_id).delete()
                     except ObjectDoesNotExist:
                         pass
                     question = get_object_or_404(Question, pk=question_id)
                     context = {'question': question, 'username': req.session['user'],
-                               'user_id': User.objects.get(username=req.session['user']).id, 'answer': answer,
+                               'user_id': user_id, 'answer': answer,
                                'check': '已提交', 'info_submit': '提交成功！'}
+                    question_content = Question.objects.get(id=question_id).question_content
+                    if len(question_content) > 20:
+                        question_content = question_content[0:20] + '...'
+                    ActionLog(user_id=user_id, action='submit', object_id=question_id,
+                              object_content=question_content, time=int(time.time())).save()
                     return render(req, 'polls/detail.html', context)
 
             try:
                 obj_draft = AnswerDraft.objects.get(question_id=question_id,
-                                                    user_id=User.objects.get(username=req.session['user']).id)
+                                                    user_id=user_id)
             except ObjectDoesNotExist:
                 question = get_object_or_404(Question, pk=question_id)
                 context = {'question': question, 'username': req.session['user'],
-                           'user_id': User.objects.get(username=req.session['user']).id, }
+                           'user_id': user_id, }
                 return render(req, 'polls/detail.html', context)
 
             question = get_object_or_404(Question, pk=question_id)
             context = {'question': question, 'username': req.session['user'],
-                       'user_id': User.objects.get(username=req.session['user']).id, 'draft': obj_draft.answer_text}
+                       'user_id': user_id, 'draft': obj_draft.answer_text}
             return render(req, 'polls/detail.html', context)
 
 
@@ -240,7 +263,8 @@ def regist(req):  # 实现用户注册
                 return render(req, 'polls/signup.html', {'error_exist': '用户名已存在！'})
 
             User.objects.create_user(username=username, password=password)
-            if User.objects.filter(username=username):  # 注册成功后对其登录
+            if User.objects.filter(username=username):  # 注册成功后对其登录并创建对应信息数据记录
+                UserInfo.objects.create(user_id=User.objects.get(username=username).id)
                 user = authenticate(username=username, password=password)
                 login(req, user)
                 Log(action_flag=True, user=user, time=timezone.now(), action='login', message='登陆成功').save()
@@ -261,7 +285,7 @@ def login_view(req):
         return HttpResponseRedirect('../../')
 
     if req.method == 'POST':
-        username = req.POST.get('username', '')  # 返回的username是unicode
+        username = req.POST.get('username', '')
         password = req.POST.get('password', '')
         login_remember = req.POST.get('chkRemember', '')
         user = authenticate(username=username, password=password)
@@ -363,8 +387,10 @@ def profile(req, user_id):
             major = req.POST.get('major', '')
             email = req.POST.get('email', '')
             about_me = re.sub('\r\n', '<br>', req.POST.get('about_me', ''))
+            qq = req.POST.get('qq', '')
+            github = req.POST.get('github', '')
             infolist = {'name': name, 'number': number, 'gender': gender, 'address': address, 'phone': phone,
-                        'major': major, 'email': email, 'about_me': about_me}
+                        'major': major, 'email': email, 'about_me': about_me, 'qq': qq, 'github': github}
             UserInfo.objects.update_or_create(user_id=user_id, defaults=infolist)
             infolist['username'] = username
             infolist['user_id'] = User.objects.get(username=req.session['user']).id
@@ -372,31 +398,23 @@ def profile(req, user_id):
             return JsonResponse(infolist)
 
         else:
-            try:
-                obj_profile = UserInfo.objects.get(user_id=user_id)
-                infolist = {'name': obj_profile.name, 'number': obj_profile.number, 'gender': obj_profile.gender,
-                            'address': obj_profile.address,
-                            'phone': obj_profile.phone, 'major': obj_profile.major, 'email': obj_profile.email,
-                            'about_me': obj_profile.about_me,
-                            'username': username, 'user_id': User.objects.get(username=req.session['user']).id,
-                            'following_total': following_total,
-                            'following_pages_total': following_pages_total, 'following_list': following_list,
-                            'followed_pages_total': followed_pages_total,
-                            'followed_total': followed_total, 'followed_list': followed_list, 'page_user_id': user_id}
-                return render(req, 'polls/userinfo.html', infolist)
-
-            except ObjectDoesNotExist:
-
-                return render(req, 'polls/userinfo.html',
-                              {'username': username, 'user_id': User.objects.get(username=req.session['user']).id,
-                               'following_total': following_total,
-                               'following_pages_total': following_pages_total,
-                               'following_list': following_list,
-                               'followed_pages_total': followed_pages_total,
-                               'followed_total': followed_total,
-                               'followed_list': followed_list,
-                               'page_user_id': user_id
-                               })
+            obj_profile = UserInfo.objects.get(user_id=user_id)
+            question_collect_list = list(eval(obj_profile.collect))
+            question_list = []
+            for question_id in question_collect_list:
+                question_list.append(Question.objects.get(id=question_id))
+            action_list = ActionLog.objects.filter(user_id=user_id).order_by("-id")[0:6]
+            infolist = {'name': obj_profile.name, 'number': obj_profile.number, 'gender': obj_profile.gender,
+                        'address': obj_profile.address, 'visit': obj_profile.visit,
+                        'phone': obj_profile.phone, 'major': obj_profile.major, 'email': obj_profile.email,
+                        'about_me': obj_profile.about_me, 'qq': obj_profile.qq, 'github': obj_profile.github,
+                        'username': username, 'user_id': User.objects.get(username=req.session['user']).id,
+                        'question_list': question_list, 'question_count': len(question_collect_list),
+                        'following_total': following_total, 'following_pages_total': following_pages_total,
+                        'following_list': following_list, 'followed_pages_total': followed_pages_total,
+                        'followed_total': followed_total, 'followed_list': followed_list, 'page_user_id': user_id,
+                        'answer_total': Answer.objects.filter(user_id=user_id).count(), 'action_list': action_list}
+            return render(req, 'polls/userinfo.html', infolist)
 
     else:  # 访问非自己页面
         try:
@@ -404,38 +422,30 @@ def profile(req, user_id):
             relation_flag = 1
         except ObjectDoesNotExist:
             relation_flag = 0
-        try:
-            obj_profile = UserInfo.objects.get(user_id=user_id)
-            infolist = {'name': obj_profile.name, 'number': obj_profile.number, 'gender': obj_profile.gender,
-                        'address': obj_profile.address, 'phone': obj_profile.phone, 'major': obj_profile.major,
-                        'email': obj_profile.email,
-                        'about_me': obj_profile.about_me, 'username': username,
-                        'user_id': User.objects.get(username=req.session['user']).id,
-                        'following_total': following_total, 'following_pages_total': following_pages_total,
-                        'following_list': following_list,
-                        'followed_pages_total': followed_pages_total, 'followed_total': followed_total,
-                        'followed_list': followed_list,
-                        'page_user_id': user_id, 'relation': relation_flag
-                        }
-            return render(req, 'polls/userinfo_other.html', infolist)
 
-        except ObjectDoesNotExist:
-            return render(req, 'polls/userinfo_other.html',
-                          {'username': username, 'user_id': User.objects.get(username=req.session['user']).id,
-                           'following_total': following_total, 'following_pages_total': following_pages_total,
-                           'following_list': following_list,
-                           'followed_pages_total': followed_pages_total, 'followed_total': followed_total,
-                           'followed_list': followed_list,
-                           'page_user_id': user_id, 'relation': relation_flag
-                           })
+        obj_profile = UserInfo.objects.get(user_id=user_id)
+        obj_profile.visit += 1
+        obj_profile.save()
+        action_list = ActionLog.objects.filter(user_id=user_id).order_by("-id")[0:6]
+        infolist = {'name': obj_profile.name, 'number': obj_profile.number, 'gender': obj_profile.gender,
+                    'address': obj_profile.address, 'phone': obj_profile.phone, 'major': obj_profile.major,
+                    'email': obj_profile.email, 'qq': obj_profile.qq, 'github': obj_profile.github,
+                    'about_me': obj_profile.about_me, 'visit': obj_profile.visit, 'username': username,
+                    'user_id': User.objects.get(username=req.session['user']).id, 'page_user_name': User.objects.get(id=user_id).username,
+                    'following_total': following_total, 'following_pages_total': following_pages_total,
+                    'following_list': following_list,
+                    'followed_pages_total': followed_pages_total, 'followed_total': followed_total,
+                    'followed_list': followed_list, 'answer_total': Answer.objects.filter(user_id=user_id).count(),
+                    'page_user_id': user_id, 'relation': relation_flag, 'action_list': action_list
+                    }
+        return render(req, 'polls/userinfo_other.html', infolist)
 
 
 @csrf_exempt
-def ajax(req):
+def img_ajax(req):
     if req.is_ajax():
         if req.method == 'POST':
             return JsonResponse({'result': "success"})
-    return HttpResponse('abc')
 
 
 def follow_ajax(req):
@@ -455,6 +465,14 @@ def follow_ajax(req):
             except ObjectDoesNotExist:
                 obj = Friend(user_id=req.GET.get('user_id'), user_follow_id=req.GET.get('follow_id'))
                 obj.save()
+                if UserInfo.objects.get(user_id=req.GET.get('follow_id')).name:
+                    ActionLog(user_id=req.GET.get('user_id'), action='follow', object_id=req.GET.get('follow_id'),
+                              object_content=UserInfo.objects.get(user_id=req.GET.get('follow_id')).name,
+                              time=int(time.time())).save()
+                else:
+                    ActionLog(user_id=req.GET.get('user_id'), action='follow', object_id=req.GET.get('follow_id'),
+                              object_content=User.objects.get(id=req.GET.get('follow_id')).username,
+                              time=int(time.time())).save()
             return JsonResponse({'result': 'success'})
 
 
@@ -546,6 +564,12 @@ def comment(req):
         answer_model = Answer.objects.get(id=question_id)
         answer_model.comment = text
         answer_model.save()
+        question_content = Question.objects.get(id=question_id).question_content
+        if len(question_content) > 20:
+            question_content = question_content[0:20]+'...'
+
+        ActionLog(user_id=1, action='comment', object_id=question_id, object_content=question_content,
+                  time=int(time.time())).save()
         return JsonResponse({'result': 'success'})
 
 
@@ -575,3 +599,59 @@ def search(req, text):
                'user_list': user_list_final, 'name_list': name_list_final}
 
     return render(req, 'polls/search.html', context)
+
+
+@csrf_exempt
+def change_password(req):
+    if req.is_ajax() and req.method == 'POST':
+        user_id = req.POST.get('user_id')
+        pw_old = req.POST.get('pw_old')
+        pw_new = req.POST.get('pw_new')
+        user = User.objects.get(id=user_id)
+
+        if hashers.check_password(pw_old, user.password):
+            user.set_password(pw_new)
+            user.save()
+            user_new = authenticate(username=user.username, password=pw_new)  # 修改密码后重新登录用户
+            login(req, user_new)
+            Log(action_flag=True, user=user_new, time=timezone.now(), action='change_password', message='修改成功').save()
+            req.session['user'] = user.username
+
+            return JsonResponse({'result': 'success'})
+        else:
+            return JsonResponse({'result': '原密码错误！'})
+
+
+def question_collect(req):
+    if req.is_ajax() and req.method == 'GET':
+        if req.GET.get('flag') == 'collect':
+            collect_list = req.GET.getlist('id')
+            user_id = req.GET.get('user_id')
+            user = UserInfo.objects.get(user_id=user_id)
+            past_list = list(eval(user.collect))
+            past_len = len(past_list)
+            past_list.extend(collect_list)
+            past_list = list(set(past_list))
+            past_list.sort()
+            if past_len-len(past_list) == 0:
+                return JsonResponse({'result': 'success'})
+            else:
+                user.collect = str(past_list)
+                user.save()
+                ActionLog(user_id=user_id, action='collect', object_id=past_len-len(past_list), object_content='', time=int(time.time())).save()
+                return JsonResponse({'result': 'success'})
+        elif req.GET.get('flag') == 'delete':
+            collect_list = req.GET.getlist('id')
+            user_id = req.GET.get('user_id')
+            user = UserInfo.objects.get(user_id=user_id)
+            past_list = list(eval(user.collect))
+            for question_id in collect_list:
+                try:
+                    past_list.remove(question_id)
+                except ValueError:
+                    pass
+            user.collect = str(past_list)
+            user.save()
+
+            return JsonResponse({'result': 'success'})
+

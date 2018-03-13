@@ -33,6 +33,10 @@ class UserInfo(models.Model):
     gender = models.CharField(max_length=10)
     phone = models.CharField(max_length=15)
     about_me = models.CharField(max_length=200)
+    qq = models.CharField(max_length=20)
+    github = models.CharField(max_length=50)
+    visit = models.IntegerField(default=0)
+    collect = models.CharField(max_length=200, default='[]')
 
 
 class Answer(models.Model):
@@ -60,4 +64,12 @@ class Log(models.Model):
 class Friend(models.Model):
     user = models.ForeignKey(auth.models.User, on_delete=models.CASCADE, related_name='user')
     user_follow = models.ForeignKey(auth.models.User, on_delete=models.CASCADE, related_name='user_follow')
+
+
+class ActionLog(models.Model):
+    user = models.ForeignKey(auth.models.User, on_delete=models.CASCADE)
+    action = models.CharField(max_length=10)
+    object_id = models.IntegerField()
+    object_content = models.CharField(max_length=100)
+    time = models.IntegerField()
 

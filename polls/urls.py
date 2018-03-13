@@ -19,9 +19,11 @@ urlpatterns = [
     path('accounts/logout/', log_out, name='logout'),
     path('accounts/<int:user_id>/', profile, name='profile'),
     path('accounts//', jump_to_index),
-    path('ajax/', ajax, name='ajax'),
+    path('accounts/pw_change/', change_password, name='change_password'),
+    path('img_ajax/', img_ajax, name='user_img_ajax'),
     path('follow_ajax/', follow_ajax, name='follow_ajax'),
     path('get_friend/', get_friend, name='get_friend'),
-    path('answer_comment/', comment, name = 'comment')
+    path('answer_comment/', comment, name='comment'),
+    path('question_collect/', question_collect, name='question_collect')
 
 ]

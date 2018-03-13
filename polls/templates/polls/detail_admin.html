@@ -19,7 +19,8 @@
         <div class="padding-md">
             <ul class="breadcrumb">
                 <li><span class="primary-font"><i class="icon-home"></i></span><a href="{% url 'index' %}">主页</a></li>
-                <li><span class="primary-font"><i class="icon-home"></i></span><a href="{% url 'jump_question' %}">问题列表</a></li>
+                <li><span class="primary-font"><i class="icon-home"></i></span><a
+                        href="{% url 'jump_question' %}">问题列表</a></li>
                 <li><span class="primary-font"><i class="icon-home"></i></span>当前问题</li>
             </ul>
 
@@ -59,19 +60,21 @@
                                 </ul>
                             </div>
                             <div class="smart-widget-body" style="font-family: 微软雅黑">
-                                <form id="question_form" class="form-horizontal m-top-md" method="post" enctype="multipart/form-data">
+                                <form id="question_form" class="form-horizontal m-top-md" method="post"
+                                      enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">题型</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="name" value="{{ question.question_name }}">
+                                            <input type="text" id="question_name" class="form-control" name="name">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">题目内容</label>
                                         <div class="col-sm-9">
-                                            <textarea rows="4" id="content" class="form-control" style="resize: none" name="content" ></textarea>
+                                            <textarea rows="4" id="content" class="form-control" style="resize: none"
+                                                      name="content" maxlength="500"></textarea>
                                         </div>
                                     </div>
 
@@ -79,8 +82,12 @@
                                     <div class="form-group m-top-lg">
                                         <label class="col-sm-3 control-label"></label>
                                         <div class="col-sm-9">
-                                            <button class="btn btn-info" id="submitbutton" type="button" >修改题目</button>
-                                            <button class="btn btn-danger" id="resetbutton" type="reset" >重置</button>
+                                            <button class="btn btn-info" id="submitbutton" type="button"><i
+                                                    class="fa fa-edit m-right-xs"></i>修改题目
+                                            </button>
+                                            <button class="btn btn-danger" id="resetbutton" type="reset"><i
+                                                    class="fa fa-undo m-right-xs"></i>重置
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -120,29 +127,35 @@
                                     <li style="background-color:#fff;" data-color="reset"></li>
                                 </ul>
                             </div>
-                            <div class="smart-widget-body" style="font-family: 微软雅黑">
+                            <div class="smart-widget-body" style="font-family: 微软雅黑;overflow-y: auto">
                                 <table class="table table-striped">
                                     <thead>
-                                        <tr>
-                                            <th style="width: 5%">#</th>
-                                            <th style="width: 12%">用户名</th>
-                                            <th style="width: 7%">姓名</th>
-                                            <th style="width: 11%">学号</th>
-                                            <th style="width: 30%">答案</th>
-                                            <th style="width: 35%">评价</th>
+                                    <tr>
+                                        <th style="width: 5%">#</th>
+                                        <th style="width: 12%">用户名</th>
+                                        <th style="width: 7%">姓名</th>
+                                        <th style="width: 11%">学号</th>
+                                        <th style="width: 30%">答案</th>
+                                        <th style="width: 35%">评价</th>
 
-                                        </tr>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     {% if answer_list %}
                                         {% for answer in answer_list %}
                                             <tr>
-                                                <td>{{forloop.counter}}</td>
+                                                <td>{{ forloop.counter }}</td>
                                                 <td>{{ answer.username }}</td>
                                                 <td>{{ answer.name }}</td>
                                                 <td>{{ answer.number }}</td>
                                                 <td>{{ answer.answer_text }}</td>
-                                                <td><input type="text" style="display: inline-block;width: 85%" class="form-control" id="{{ answer.id }}" value="{{ answer.comment }}"><button class="btn btn-success" name="comment_button" style="display: inline-block;margin-left: 3px">提交</button></td>
+                                                <td><input type="text" style="display: inline-block;width: 85%"
+                                                           class="form-control" id="{{ answer.id }}"
+                                                           value="{{ answer.comment }}">
+                                                    <button class="btn btn-success" name="comment_button"
+                                                            style="display: inline-block;margin-left: 3px">提交
+                                                    </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     {% endif %}
@@ -196,45 +209,68 @@
         document.getElementById('question').classList.add('active');  //左侧菜单对应页面的选项变成active
 
         var strContent = '{{ question.question_content }}';
-        var reg = new RegExp("&lt;br&gt;","g");
-        strContent=strContent.replace(reg,"\n");
-        document.getElementById('content').value=strContent;
+        var reg = new RegExp("&lt;br&gt;", "g");
+        strContent = strContent.replace(reg, "\n");
+        $('#question_name').val('{{ question.question_name }}');
+        $('#content').val(strContent);
 
-        $('#submitbutton').click('on',function () {
-            $.ajax( {
-                url:'',
-                type: "POST",
-                dataType:'json',
-                data:$('#question_form').serialize(),
-                success: function(){
-                    layer.open({title:'成功',content:'提交成功'});
+        $('#submitbutton').click('on', function () {
+            $.ajax({
+                url: '',
+                type: "GET",
+                dataType: 'json',
+                data: {'question_id':{{question.id}}},
+                success: function (data) {
+                    if (data.result === 'success') {
+                        var question_name = data.question_name, question_content = data.question_content;
+                        var reg_replace = new RegExp("<br>", "g");
+                        question_content = question_content.replace(reg_replace, "\n");
+                        if ($('#question_name').val() === question_name && $('#content').val() === question_content) {
+                            layer.open({title: '错误', content: '与原问题相符！请检查输入。'})
+                        } else {
+                            layer.open({
+                                title: '注意', content: '更改问题会导致用户需要重新回答，是否确定？', yes: function () {
+                                    $.ajax({
+                                        url: '',
+                                        type: "POST",
+                                        dataType: 'json',
+                                        data: $('#question_form').serialize(),
+                                        success: function () {
+                                            layer.open({title: '成功', content: '修改成功'});
+                                        }
+                                    })
+                                }
+                            })
+                        }
+
+                    }
                 }
             })
         });
 
-        $('[name="comment_button"]').on('click',function () {
-            var text = $(this).prev().val();
-            var question_id = $(this).prev().attr('id');
-            if(text===""){
-                layer.open({title:'错误', content:'提交内容为空！'});
-            }else{
-                $.ajax({
-                    url:{% url 'comment' %},
-                    type:'POST',
-                    dataType:'json',
-                    data:{'text':text, 'id':question_id},
-                    success: function (data) {
-                        if(data.result==='success'){
-                            layer.msg('提交成功！',{time:1500});
+        $('[name="comment_button"]').on('click', function () {
+                var text = $(this).prev().val();
+                var question_id = $(this).prev().attr('id');
+                if (text === "") {
+                    layer.open({title: '错误', content: '提交内容为空！'});
+                } else {
+                    $.ajax({
+                        url:{% url 'comment' %},
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'text': text, 'id': question_id},
+                        success: function (data) {
+                            if (data.result === 'success') {
+                                layer.msg('提交成功！', {time: 1500});
+                            }
                         }
-                    }
                     })
                 }
             }
         );
 
 
-        $(function()	{
+        $(function () {
             //Delete Widget Confirmation
             $('#deleteWidgetConfirm').popup({
                 vertical: 'top',
@@ -244,22 +280,24 @@
 
             //Form Validation
 
-            $('#formValidate2').parsley( { listeners: {
-                onFieldValidate: function ( elem ) {
-                    // if field is not visible, do not apply Parsley validation!
-                    if ( !$( elem ).is( ':visible' ) ) {
-                        return true;
-                    }
+            $('#formValidate2').parsley({
+                listeners: {
+                    onFieldValidate: function (elem) {
+                        // if field is not visible, do not apply Parsley validation!
+                        if (!$(elem).is(':visible')) {
+                            return true;
+                        }
 
-                    return false;
-                },
-                onFormSubmit: function ( isFormValid, event ) {
-                    if(isFormValid)	{
-                        alert('Your message has been sent');
                         return false;
+                    },
+                    onFormSubmit: function (isFormValid, event) {
+                        if (isFormValid) {
+                            alert('Your message has been sent');
+                            return false;
+                        }
                     }
                 }
-            }});
+            });
         });
     </script>
 {% endblock %}

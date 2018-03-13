@@ -39,13 +39,13 @@
                             <span id="username_warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
 						</div>
 						<div class="form-group m-bottom-md">
-							<input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="30" onblur="check_password()" style="display:inline-block; width: 94%">
+							<input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="30" onblur="check_password()" onkeyup="check_password()" style="display:inline-block; width: 94%">
                             <i class="fa fa-lg" style="display:inline-block;color: lawngreen" id="pw_icon"></i>
                             <span id="pw_warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
 						</div>
 						<div class="form-group m-bottom-md">
 							<input type="password" name="password_check" id="password_check" class="form-control"
-                                   onblur="check_password()" placeholder="确认密码" style="display:inline-block; width: 94%">
+                                   onblur="check_password()" onkeyup="check_password()" placeholder="确认密码" style="display:inline-block; width: 94%">
                             <i class="fa fa-lg" style="display:inline-block;color: lawngreen" id="pw_check_icon"></i>
                             <span id="warning" style="margin-left:5px;margin-top:5px;position: absolute;color: red;font-size: 15px;font-weight: normal;font-style:normal;font-family: 微软雅黑;text-decoration: none;"></span>
 						</div>

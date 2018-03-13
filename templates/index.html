@@ -68,12 +68,12 @@
 								</div>
 							</li>
 						</ul>
-						<div class="pull-right m-right-sm">
 
+						<div class="pull-right m-right-sm">
 							<div class="user-block hidden-xs">
 								<a href="{% url 'index' %}" id="userToggle" data-toggle="dropdown">
 									<img src="/static/images/profile/profile1.jpg" alt="" class="img-circle inline-block user-profile-pic">
-									<div class="user-detail inline-block" id="username">
+									<div class="user-detail inline-block" id="username" style="font-family: 微软雅黑">
 										{{ username }}
 										<i class="fa fa-angle-down"></i>
 									</div>
@@ -104,6 +104,13 @@
                                 {% endif %}
                             </script>
 						</div>
+                        <div class="pull-right">
+							<div class="user-block hidden-xs" id="time" style="font-family: 微软雅黑;font-size: 14px;padding-top: 16px">
+                                
+							</div>
+
+						</div>
+
 					</div>
 				</div><!-- ./top-nav-inner -->	
 			</header>
@@ -884,12 +891,12 @@
             {% endblock %}
 
 
-			<footer class="footer">
+			<footer class="footer" style="font-family: 微软雅黑">
 				<span class="footer-brand">
-					<strong class="text-danger">Simplify</strong> Admin
+					<strong class="text-danger">A918</strong> 问答系统
 				</span>
 				<p class="no-margin">
-					&copy; 2014 <strong>Simplify Admin</strong>. ALL Rights Reserved. 
+					&copy; 2018 <strong>A918 问答系统</strong>. ALL Rights Reserved.
 				</p>	
 			</footer>
 		</div><!-- /wrapper -->
@@ -1013,6 +1020,33 @@
         <script src="/static/js/layer.js"></script>
 
         <script type="text/javascript">
+            (function nowTime(){
+
+                var Y,M,D,W,H,I,S;
+                var Week=['星期天','星期一','星期二','星期三','星期四','星期五','星期六'];
+                //月日时分秒为单位时前面补零
+                function fillZero(v){
+                    if(v<10){v='0'+v;}
+                    return v;
+                }
+                (function get_time(){
+                    var d=new Date();
+
+                    Y=d.getFullYear();
+                    M=fillZero(d.getMonth()+1);
+                    D=fillZero(d.getDate());
+                    W=Week[d.getDay()];
+                    H=fillZero(d.getHours());
+                    I=fillZero(d.getMinutes());
+                    S=fillZero(d.getSeconds());
+
+                    document.getElementById('time').innerHTML=Y+'年'+M+'月'+D+'日 '+' '+W+' '+H+':'+I+':'+S;
+                    //每秒更新时间
+                    setTimeout(get_time,1000);
+                })();
+            })();
+
+
 			function logout() {
 			    //右上角头像处注销函数
 			    layer.open({title:'注销', content:'确认注销吗？', offset:'rt', btn:['确定','取消'], yes:function () {

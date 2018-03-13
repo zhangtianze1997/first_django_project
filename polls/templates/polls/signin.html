@@ -22,7 +22,7 @@
 
   	</head>
 
-  	<body class="overflow-hidden light-background" onkeydown="keylogin()">
+  	<body class="overflow-hidden light-background" onkeydown="keylogin()" ondragstart="return false;" onmouseup="hide_password()">  <!--防止鼠标拖动-->
 		<div class="wrapper no-navigation preload">
 			<div class="sign-in-wrapper">
 				<div class="sign-in-inner">
@@ -35,8 +35,11 @@
 						<div class="form-group m-bottom-md">
 							<input type="text" name="username" id="username" class="form-control" placeholder="用户名">
 						</div>
-						<div class="form-group">
+						<div class="form-group has-feedback">
+                            <label class="control-label sr-only" for="password"></label>
 							<input type="password" name="password" id="password" class="form-control" placeholder="密码">
+                            <span class="fa fa-eye-slash fa-lg form-control-feedback" id="password_type" onmousedown="display_password()"
+                                  onmouseup="hide_password()" style="padding-top: 8px;cursor: pointer;"></span>
 						</div>
 
 						<div class="form-group">
@@ -53,7 +56,7 @@
 
 						<div class="m-top-md p-top-sm">
 							<div class="font-12 text-center m-bottom-xs">
-								<a href="#" class="font-12">忘记密码?</a>
+								<a href="javascript:alert('请联系管理员！')" class="font-12">忘记密码?</a>
 							</div>
 							<div class="font-12 text-center m-bottom-xs">没有账号?</div>
 							<a href="../register/" class="btn btn-default block">注册</a>
@@ -105,7 +108,14 @@
                 //按回车登录
                 if (event.keyCode==13)
                     document.getElementById('login').click();
-
+            }
+            function display_password() {
+                $('#password').attr('type','text');
+                $('#password_type').removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+            function hide_password() {
+                $('#password').attr('type','password');
+                $('#password_type').removeClass('fa-eye-').addClass('fa-eye-slash');
             }
 
 

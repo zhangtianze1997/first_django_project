@@ -72,7 +72,7 @@
                                         </div><!-- /.col -->
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label" style="font-size: 15px;color: #fd8d00">上传时间：{{ question.date }}</label>
+                                                <label class="control-label" style="font-size: 15px;color: #fd8d00">上传时间：{{ question.date|date:"Y-m-d H:i:s" }}</label>
                                             </div>
                                         </div><!-- /.col -->
                                     </div><!-- /.row -->
@@ -93,16 +93,16 @@
 
                                     <div class="text-right m-top-md">
                                         <button class="btn btn-info" id="submitbutton" type="button"
-                                                onclick="submit_check()" style="display: none">提交
+                                                onclick="submit_check()" style="display: none"><i class="fa fa-file m-right-xs"></i>提交
                                         </button>
                                         <button class="btn btn-warning" id="savebutton" type="button" onclick="save()"
-                                                style="display: none">保存草稿
+                                                style="display: none"><i class="fa fa-save m-right-xs"></i>保存草稿
                                         </button>
                                         <button class="btn btn-danger" id="resetbutton" type="reset"
-                                                style="display: none">重置
+                                                style="display: none"><i class="fa fa-undo m-right-xs"></i>重置
                                         </button>
                                         <button class="btn btn-default" id="backbutton" type="button"
-                                                onclick="window.location.href='../'">返回
+                                                onclick="window.location.href='../'"><i class="fa fa-arrow-left m-right-xs"></i>返回
                                         </button>
 
                                     </div>
