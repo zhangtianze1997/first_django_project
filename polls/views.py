@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django import forms
 from django.forms.models import model_to_dict
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout, hashers
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from datetime import timedelta
 import re
 import time
 
@@ -58,7 +59,7 @@ def question(req, page):
         if page > pages_total or page < 1:
             return HttpResponseRedirect('../page1/')
 
-        question_list = Question.objects.all()[(page - 1) * 10:page * 10]
+        question_list = Question.objects.all().order_by('-id')[(page - 1) * 10:page * 10]
         check_list = []
         for question in question_list:
             try:
@@ -402,7 +403,10 @@ def profile(req, user_id):
             question_collect_list = list(eval(obj_profile.collect))
             question_list = []
             for question_id in question_collect_list:
-                question_list.append(Question.objects.get(id=question_id))
+                try:
+                    question_list.append(Question.objects.get(id=question_id))
+                except ObjectDoesNotExist:
+                    pass
             action_list = ActionLog.objects.filter(user_id=user_id).order_by("-id")[0:6]
             infolist = {'name': obj_profile.name, 'number': obj_profile.number, 'gender': obj_profile.gender,
                         'address': obj_profile.address, 'visit': obj_profile.visit,
@@ -431,7 +435,8 @@ def profile(req, user_id):
                     'address': obj_profile.address, 'phone': obj_profile.phone, 'major': obj_profile.major,
                     'email': obj_profile.email, 'qq': obj_profile.qq, 'github': obj_profile.github,
                     'about_me': obj_profile.about_me, 'visit': obj_profile.visit, 'username': username,
-                    'user_id': User.objects.get(username=req.session['user']).id, 'page_user_name': User.objects.get(id=user_id).username,
+                    'user_id': User.objects.get(username=req.session['user']).id,
+                    'page_user_name': User.objects.get(id=user_id).username,
                     'following_total': following_total, 'following_pages_total': following_pages_total,
                     'following_list': following_list,
                     'followed_pages_total': followed_pages_total, 'followed_total': followed_total,
@@ -526,7 +531,7 @@ def get_friend(req):
             for obj in following_list_id:
                 try:
                     user_obj = UserInfo.objects.get(user_id=obj.user_follow_id)
-                    if User.objects.get(username=username).id == obj.user_id:
+                    if User.objects.get(username=username).id == obj.user_follow_id:
                         flag_list.append({'relation': 'self'})
                     else:
                         try:
@@ -566,7 +571,7 @@ def comment(req):
         answer_model.save()
         question_content = Question.objects.get(id=question_id).question_content
         if len(question_content) > 20:
-            question_content = question_content[0:20]+'...'
+            question_content = question_content[0:20] + '...'
 
         ActionLog(user_id=1, action='comment', object_id=question_id, object_content=question_content,
                   time=int(time.time())).save()
@@ -596,7 +601,7 @@ def search(req, text):
         name_list_final.append(obj)
 
     context = {'username': username, 'user_id': User.objects.get(username=username).id, 'question_list': question_list,
-               'user_list': user_list_final, 'name_list': name_list_final}
+               'user_list': user_list_final, 'name_list': name_list_final, 'search_text': text}
 
     return render(req, 'polls/search.html', context)
 
@@ -633,12 +638,13 @@ def question_collect(req):
             past_list.extend(collect_list)
             past_list = list(set(past_list))
             past_list.sort()
-            if past_len-len(past_list) == 0:
+            if past_len - len(past_list) == 0:
                 return JsonResponse({'result': 'success'})
             else:
                 user.collect = str(past_list)
                 user.save()
-                ActionLog(user_id=user_id, action='collect', object_id=past_len-len(past_list), object_content='', time=int(time.time())).save()
+                ActionLog(user_id=user_id, action='collect', object_id=len(past_list) - past_len, object_content='',
+                          time=int(time.time())).save()
                 return JsonResponse({'result': 'success'})
         elif req.GET.get('flag') == 'delete':
             collect_list = req.GET.getlist('id')
@@ -650,8 +656,17 @@ def question_collect(req):
                     past_list.remove(question_id)
                 except ValueError:
                     pass
+            list_len = len(past_list)
+            question_list = []
+            for question_id in past_list:
+                try:
+                    obj = Question.objects.get(id=question_id)
+                    obj.date = obj.date + timedelta(hours=8)
+                    question_list.append(obj)
+                except ObjectDoesNotExist:
+                    pass
+            question_list = serializers.serialize("json", question_list)
             user.collect = str(past_list)
             user.save()
 
-            return JsonResponse({'result': 'success'})
-
+            return JsonResponse({'result': 'success', 'question_list': question_list, 'len': list_len})

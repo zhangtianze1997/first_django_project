@@ -85,9 +85,7 @@
                                         <td>
                                             <div class="author-name" style="margin-left: 0px"><a href="{{ question.id }}"><strong class="block font-md">{{ question.question_content }}</strong></a></div>
                                         </td>
-                                        <td>
-                                            <a>{{ question.question_name }}</a>
-                                        </td>
+                                        <td>{{ question.question_name }}</td>
                                         <td>{{ question.date|date:"Y-m-d H:i:s" }}</td>
                                     </tr>
                                 {% endfor %}
@@ -196,7 +194,7 @@
             $(this).html(obj);
         });
 
-        {% if question_list %}  // 为checkbox添加id等元素
+        {% if question_list %}  // 添加状态图标
             var check_icon_list = document.getElementsByName('check_icon');
             var k=0;
 

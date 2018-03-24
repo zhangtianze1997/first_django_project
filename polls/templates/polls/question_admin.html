@@ -82,15 +82,13 @@
                                 {% for question in question_list %}
                                     <tr>
                                         <td class="text-center">
-                                            <div class="custom-checkbox"><input type="checkbox" id="chk1" name="check_in_list" class="inbox-check"><label></label></div>
+                                            <div class="custom-checkbox"><input type="checkbox" id="{{ question.id }}" name="check_in_list" class="inbox-check"><label for="{{ question.id }}"></label></div>
                                         </td>
 
                                         <td>
                                             <div class="author-name" style="margin-left: 0px"><a href="{{ question.id }}"><strong class="block font-md">{{ question.question_content }}</strong></a></div>
                                         </td>
-                                        <td>
-                                            <a>{{ question.question_name }}</a>
-                                        </td>
+                                        <td>{{ question.question_name }}</td>
                                         <td>{{ question.date|date:"Y-m-d H:i:s" }}</td>
                                     </tr>
                                 {% endfor %}
@@ -199,15 +197,6 @@
             $(this).html(obj);
         });
 
-        {% if question_list %}  // 为checkbox添加id等元素
-            var box_list= document.getElementsByClassName('custom-checkbox');
-            var i=1;
-            {% for question in question_list %}
-                box_list[i].firstChild.id={{ question.id }};
-                box_list[i].lastChild.setAttribute('for',{{ question.id }});
-                i++;
-            {% endfor %}
-        {% endif %}
 
         for(var k=0;k<2;k++)   //上下页跳转链接
         {

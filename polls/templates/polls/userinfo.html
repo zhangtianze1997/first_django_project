@@ -78,7 +78,7 @@
 
                             <div class="m-top-sm" style="font-family: 微软雅黑">
                                 <div class="m-top-xs">
-                                    <i class="fa fa-bars user-profile-icon"></i>
+                                    <i class="fa fa-bars user-profile-icon" title="学号"></i>
                                     <span id="number_left">{% if number %}
                                         {{ number }}
                                     {% else %}
@@ -87,7 +87,7 @@
                                 </div>
 
                                 <div class="m-top-xs">
-                                    <i class="fa fa-map-marker user-profile-icon"></i>
+                                    <i class="fa fa-map-marker user-profile-icon" title="家庭住址"></i>
                                     <span id="address_left">{% if address %}
                                         {{ address }}
                                     {% else %}
@@ -96,7 +96,7 @@
                                 </div>
 
                                 <div class="m-top-xs">
-                                    <i class="fa fa-briefcase user-profile-icon"></i>
+                                    <i class="fa fa-briefcase user-profile-icon" title="专业"></i>
                                     <span id="major_left">{% if major %}
                                         {{ major }}
                                     {% else %}
@@ -105,7 +105,7 @@
                                 </div>
 
                                 <div class="m-top-xs">
-                                    <i class="fa fa-phone user-profile-icon"></i>
+                                    <i class="fa fa-phone user-profile-icon" title="电话号码"></i>
                                     <span id="phone_left">{% if phone %}
                                         {{ phone }}
                                     {% else %}
@@ -114,7 +114,7 @@
                                 </div>
 
                                 <div class="m-top-xs">
-                                    <i class="fa fa-envelope user-profile-icon"></i>
+                                    <i class="fa fa-envelope user-profile-icon" title="邮箱"></i>
                                     <span id="email_left">{% if email %}
                                         {{ email }}
                                     {% else %}
@@ -247,42 +247,8 @@
                                 <div class="tab-content">
                                     <div class="tab-pane fade in active" id="profileTab1">
                                         <h4 class="header-text m-bottom-md">
-                                            My Skill
+                                            个人概况
                                         </h4>
-                                        <div class="row">
-                                            <div class="col-sm-3 col-sm-6s">
-                                                <div class="m-bottom-md">
-                                                    <div class="text-center">HTML5</div>
-                                                    <div class="chart profile-skill chart-skill-red center-block"
-                                                         data-percent="73">73%
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 col-sm-6s">
-                                                <div class="m-bottom-md">
-                                                    <div class="text-center">CSS</div>
-                                                    <div class="chart profile-skill chart-skill-blue center-block"
-                                                         data-percent="54">54%
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 col-sms-6">
-                                                <div class="m-bottom-md">
-                                                    <div class="text-center">Jquery</div>
-                                                    <div class="chart profile-skill chart-skill-green center-block"
-                                                         data-percent="89">89%
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 col-sm-6s">
-                                                <div class="m-bottom-md">
-                                                    <div class="text-center">PHP</div>
-                                                    <div class="chart profile-skill chart-skill-purple center-block"
-                                                         data-percent="92">92%
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><!-- ./row -->
 
                                         <div class="row">
                                             <div class="col-lg-6">
@@ -633,7 +599,7 @@
                                                         <th style="width: 30%">上传时间</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style="word-wrap: break-word;word-break: break-all">
+                                                <tbody style="word-wrap: break-word;word-break: break-all" id="question_table_body">
                                                 {% if question_list %}
                                                     {% for question in question_list %}
                                                         <tr>
@@ -653,7 +619,7 @@
 
                                         </div>
                                         <div class="pagination-row clearfix">
-                                            <div class="pull-left vertical-middle hidden-xs">共收藏{{ question_count }}题</div>
+                                            <div class="pull-left vertical-middle hidden-xs" id="collect_total">共收藏{{ question_count }}题</div>
                                             <div class="col-sm-6 pull-right pull-left-sm text-right text-left-sm">
                                                 <a href="javascript:void(0)" onclick="question_collect_delete()" class="btn btn-danger hidden-xs"><i class="fa fa-trash m-right-xs"></i>删除收藏</a>
                                             </div><!-- ./col -->
@@ -1079,6 +1045,7 @@
                 success: function (data) {
 
                     if (data.result === 'success') {
+                        console.log(data.flag_list);
                         var obj = $('#following_display');
                         obj.empty();
                         var following_list = data.following_list;
@@ -1112,8 +1079,8 @@
                                     "                       </div>\n" +
                                     "                       <div class=\"user-detail small-img\">\n" +
                                     "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
-                                    "               <small class=\"block text-muted font-12\">" + name + "</small>\n" +
-                                    "               <small class=\"block text-muted font-12\">" + major + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + major + "</small>\n" +
                                     "               <div class=\"m-top-sm\">" +
                                     "                   <button type=\"button\" class=\"follow btn btn-default btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注中</button>\n" +
                                     "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
@@ -1134,8 +1101,8 @@
                                     "                       </div>\n" +
                                     "                       <div class=\"user-detail small-img\">\n" +
                                     "               <div class=\"font-16\">" + flag_list[i]['username'] + "</div>\n" +
-                                    "               <small class=\"block text-muted font-12\">" + name + "</small>\n" +
-                                    "               <small class=\"block text-muted font-12\">" + major + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + name + "</small>\n" +
+                                    "               <small class=\"block text-muted font-12\" style=\"height: 16.8px\">" + major + "</small>\n" +
                                     "               <div class=\"m-top-sm\">" +
                                     "                   <button type=\"button\" class=\"follow btn btn-primary btn-sm marginTB-xs\" id=\"" + id + "\" data-toggle=\"modal\">关注</button>\n" +
                                     "                   <button type=\"button\" class=\"btn btn-success btn-sm marginTB-xs\" onclick=\"window.location.href='../" + id + "/'\" data-toggle=\"modal\">查看用户资料</button>\n" +
@@ -1159,7 +1126,7 @@
             var index = layer.open({
                 title: '修改密码',
                 type: 1,
-                area: ['500px', '250px'],
+                area: ['500px', '210px'],
                 content: '<div  style="margin-top:5px"> <label class="col-sm-2 control-label" style="font-size:15px;text-align:center;line-height:29px">原密码</label> \n'
                         +' <div class="col-sm-9"> <input type="password" class="form-control" id="pw_old"> </div> </div> \n'
                         +'<div> <label class="col-sm-2 control-label" style="font-size:15px;text-align:center;line-height:29px;margin-top:5px">新密码</label> \n'
@@ -1221,8 +1188,38 @@
                         dataType:'json',
                         data:{'id':check_val, 'user_id':{{ user_id }},'flag':'delete'},
                         traditional:true,
-                        success:function () {
-                            layer.open({title:'成功',content:'删除成功',yes:function(){location.reload()},cancel:function(){location.reload()}});
+                        success:function (data) {
+                            if (data.result==='success'){
+                                layer.msg('删除成功',{time:2000});
+                                $("#collect_total").html("共收藏"+data.len+"题");
+                                var obj = $("#question_table_body"), question_list=eval(data.question_list);
+                                obj.empty();
+                                console.log(question_list);
+                                for(var i in question_list){
+
+                                    var question_content = question_list[i]['fields']["question_content"], date = question_list[i]['fields']["date"];
+                                    var reg1 = new RegExp("<br>","g");
+                                    question_content = question_content.replace(reg1, " ");
+                                    date = date.replace("T"," ");
+                                    date = date.replace(/\..*Z/,"");
+                                    date = date.replace("Z","");
+
+                                    obj.append("<tr>\n" +
+                                               "    <td class=\"text-center\">\n" +
+                                               "        <div class=\"custom-checkbox\"><input type=\"checkbox\" id=\"Q"+question_list[i]['pk']+"\" name=\""+question_list[i]['pk']+"\" class=\"inbox-check\"><label for=\"Q"+question_list[i]['pk']+"\"></label></div>\n" +
+                                               "    </td>\n" +
+                                               "    <td>"+(parseInt(i)+1)+"</td>\n" +
+                                               "    <td style=\"cursor: pointer\" onclick=\"window.location.href='../../question/page1/"+question_list[i]['pk']+"'\"><a name=\"question_content\">"+question_content+"</a></td>\n" +
+                                               "    <td>"+question_list[i]['fields']['question_name']+"</td>\n" +
+                                               "    <td>"+date+"</td>\n" +
+                                               "</tr>")
+
+                                }
+
+                            }
+                        },
+                        error:function () {
+                            alert('删除失败！')
                         }
                     })
             }})
