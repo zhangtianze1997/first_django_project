@@ -150,7 +150,7 @@
                                                 <td>{{ answer.number }}</td>
                                                 <td>{{ answer.answer_text }}</td>
                                                 <td><input type="text" style="display: inline-block;width: 85%"
-                                                           class="form-control" id="{{ answer.id }}"
+                                                           class="form-control" id="{{ answer.id }}" name="{{ answer.question_id }}"
                                                            value="{{ answer.comment }}">
                                                     <button class="btn btn-success" name="comment_button"
                                                             style="display: inline-block;margin-left: 3px">提交
@@ -250,7 +250,8 @@
 
         $('[name="comment_button"]').on('click', function () {
                 var text = $(this).prev().val();
-                var question_id = $(this).prev().attr('id');
+                var answer_id = $(this).prev().attr('id');
+                var question_id = $(this).prev().attr('name');
                 if (text === "") {
                     layer.open({title: '错误', content: '提交内容为空！'});
                 } else {
@@ -258,7 +259,7 @@
                         url:{% url 'comment' %},
                         type: 'POST',
                         dataType: 'json',
-                        data: {'text': text, 'id': question_id},
+                        data: {'text': text, 'id': answer_id, 'question':question_id},
                         success: function (data) {
                             if (data.result === 'success') {
                                 layer.msg('提交成功！', {time: 1500});

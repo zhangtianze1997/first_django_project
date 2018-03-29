@@ -565,8 +565,9 @@ def get_friend(req):
 def comment(req):
     if req.is_ajax() and req.method == "POST":
         text = req.POST.get('text')
-        question_id = req.POST.get('id')
-        answer_model = Answer.objects.get(id=question_id)
+        answer_id = req.POST.get('id')
+        question_id = req.POST.get('question')
+        answer_model = Answer.objects.get(id=answer_id)
         answer_model.comment = text
         answer_model.save()
         question_content = Question.objects.get(id=question_id).question_content

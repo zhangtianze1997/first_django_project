@@ -478,14 +478,12 @@
                                                                                     <button type="button"
                                                                                             class="follow btn btn-default btn-sm marginTB-xs"
                                                                                             id="{{ followed.user_id }}"
-                                                                                            data-toggle="modal">关注中
-                                                                                    </button>
+                                                                                            data-toggle="modal">关注中</button>
                                                                                 {% else %}
                                                                                     <button type="button"
                                                                                             class="follow btn btn-primary btn-sm marginTB-xs"
                                                                                             id="{{ followed.user_id }}"
-                                                                                            data-toggle="modal">关注
-                                                                                    </button>
+                                                                                            data-toggle="modal">关注</button>
                                                                                 {% endif %}
                                                                                 <button type="button"
                                                                                         class="btn btn-success btn-sm marginTB-xs"
@@ -543,14 +541,12 @@
                                                                                     <button type="button"
                                                                                             class="follow btn btn-default btn-sm marginTB-xs"
                                                                                             id="{{ following.user_id }}"
-                                                                                            data-toggle="modal">关注中
-                                                                                    </button>
+                                                                                            data-toggle="modal">关注中</button>
                                                                                 {% else %}
                                                                                     <button type="button"
                                                                                             class="follow btn btn-primary btn-sm marginTB-xs"
                                                                                             id="{{ following.user_id }}"
-                                                                                            data-toggle="modal">关注
-                                                                                    </button>
+                                                                                            data-toggle="modal">关注</button>
                                                                                 {% endif %}
                                                                                 <button type="button"
                                                                                         class="btn btn-success btn-sm marginTB-xs"
@@ -766,7 +762,6 @@
 
         $('#followed_display').on('click', 'li div div div div div button[class^=\'follow\']', function () { // 粉丝列表关注用户
             var obj = $(this);
-            console.log(obj);
             var id = obj.attr('id');
             if (obj.html() === '关注中') {
 
@@ -801,8 +796,6 @@
         });
         $('#following_display').on('click', 'li div div div div div button[class^=\'follow\']', function () { // 关注列表关注用户
             var obj = $(this);
-            alert('123');
-            console.log(obj);
             var id = obj.attr('id');
             if (obj.html() === '关注中') {
 
